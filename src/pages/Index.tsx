@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { VoiceOrb } from '@/components/VoiceOrb';
@@ -133,9 +132,13 @@ const Index = () => {
       <div className="w-full px-4 py-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col items-center py-[46px]">
-            {/* Title and subtitle vertically stacked */}
+            {/* Logo and subtitle vertically stacked */}
             <div className="flex flex-col items-center mb-6">
-              <h1 className="text-4xl font-bold text-gray-800 mb-2">SAM</h1>
+              <img 
+                src="/lovable-uploads/22846939-a307-4be2-b1d0-39a60a6cf0de.png" 
+                alt="SAM Logo" 
+                className="h-16 w-auto mb-2"
+              />
               <p className="text-lg text-gray-600 text-center">Ask anything about asylum in Europe</p>
             </div>
             
