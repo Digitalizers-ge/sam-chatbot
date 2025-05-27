@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Speaker } from 'lucide-react';
 
 interface MessageBubbleProps {
   message: string;
@@ -51,7 +52,7 @@ export const MessageBubble = ({
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-6 animate-fade-in`}>
       <div className={`max-w-[80%] ${isUser ? 'order-2' : 'order-1'}`}>
         <div
-          className={`rounded-2xl px-4 py-3 shadow-sm ${
+          className={`rounded-2xl px-4 py-3 shadow-sm relative ${
             isUser
               ? 'bg-blue-500 text-white rounded-br-md'
               : 'sam-glass rounded-bl-md'
@@ -61,22 +62,25 @@ export const MessageBubble = ({
           <p className={`text-xs mt-2 ${isUser ? 'text-blue-100' : 'text-gray-500'}`}>
             {formatTime(timestamp)}
           </p>
+          
+          {/* Prominent speaker section for assistant messages */}
+          {!isUser && (
+            <div className="absolute -right-3 top-1/2 transform -translate-y-1/2">
+              <Button
+                variant="default"
+                size="sm"
+                onClick={playAudio}
+                disabled={isPlaying}
+                className="w-12 h-12 rounded-full bg-yellow-400 hover:bg-yellow-500 text-gray-800 shadow-lg border-2 border-white"
+              >
+                <Speaker className="w-5 h-5" />
+              </Button>
+            </div>
+          )}
         </div>
         
         {!isUser && (
           <div className="flex flex-wrap gap-2 mt-3">
-            {audioUrl && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={playAudio}
-                disabled={isPlaying}
-                className="text-xs h-8 rounded-full sam-glass"
-              >
-                {isPlaying ? '🔊 Playing...' : '🔊 Listen'}
-              </Button>
-            )}
-            
             {onReplay && (
               <Button
                 variant="outline"
