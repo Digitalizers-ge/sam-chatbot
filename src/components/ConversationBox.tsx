@@ -27,7 +27,7 @@ export const ConversationBox = ({ messages, onSpeak }: ConversationBoxProps) => 
               <div
                 className={`rounded-2xl px-4 py-3 shadow-sm ${
                   message.isUser
-                    ? 'bg-blue-500 text-white rounded-br-md'
+                    ? 'bg-gradient-to-br from-purple-400 via-orange-300 to-yellow-400 text-white rounded-br-md'
                     : 'bg-white/70 text-gray-800 rounded-bl-md'
                 }`}
               >
@@ -35,7 +35,7 @@ export const ConversationBox = ({ messages, onSpeak }: ConversationBoxProps) => 
                   {message.text}
                 </p>
                 <div className="flex items-center justify-between mt-2">
-                  <p className={`text-xs ${message.isUser ? 'text-blue-100' : 'text-gray-500'}`}>
+                  <p className={`text-xs ${message.isUser ? 'text-white/80' : 'text-gray-500'}`}>
                     {formatTime(message.timestamp)}
                   </p>
                   
