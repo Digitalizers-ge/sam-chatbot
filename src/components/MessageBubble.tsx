@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Speaker } from 'lucide-react';
+import { Play } from 'lucide-react';
 
 interface MessageBubbleProps {
   message: string;
@@ -55,25 +55,27 @@ export const MessageBubble = ({
               : 'sam-glass rounded-bl-md'
           }`}
         >
-          <p className="text-base leading-relaxed whitespace-pre-wrap">{message}</p>
-          <p className={`text-xs mt-2 ${isUser ? 'text-blue-100' : 'text-gray-500'}`}>
-            {formatTime(timestamp)}
-          </p>
-          
-          {/* Prominent speaker section for assistant messages */}
-          {!isUser && onSpeak && (
-            <div className="absolute -right-3 top-1/2 transform -translate-y-1/2">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1">
+              <p className="text-base leading-relaxed whitespace-pre-wrap">{message}</p>
+              <p className={`text-xs mt-2 ${isUser ? 'text-blue-100' : 'text-gray-500'}`}>
+                {formatTime(timestamp)}
+              </p>
+            </div>
+            
+            {/* Integrated speaker button for assistant messages */}
+            {!isUser && onSpeak && (
               <Button
-                variant="default"
+                variant="ghost"
                 size="sm"
                 onClick={handleSpeak}
                 disabled={isPlaying}
-                className="w-12 h-12 rounded-full bg-yellow-400 hover:bg-yellow-500 text-gray-800 shadow-lg border-2 border-white"
+                className="h-10 w-10 rounded-full bg-yellow-400/20 hover:bg-yellow-400/30 text-gray-700 border border-yellow-400/30 flex-shrink-0 mt-1"
               >
-                <Speaker className="w-5 h-5" />
+                <Play className="w-5 h-5" />
               </Button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
         
         {!isUser && (
