@@ -11,6 +11,7 @@ interface MessageBubbleProps {
   onReplay?: () => void;
   onRephrase?: () => void;
   onFeedback?: (isPositive: boolean) => void;
+  onSpeak?: (text: string) => void;
 }
 
 export const MessageBubble = ({ 
@@ -20,22 +21,18 @@ export const MessageBubble = ({
   audioUrl,
   onReplay,
   onRephrase,
-  onFeedback 
+  onFeedback,
+  onSpeak
 }: MessageBubbleProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [feedbackGiven, setFeedbackGiven] = useState<boolean | null>(null);
 
-  const playAudio = async () => {
-    if (!audioUrl) return;
-    
-    try {
+  const handleSpeak = () => {
+    if (onSpeak) {
       setIsPlaying(true);
-      const audio = new Audio(audioUrl);
-      audio.onended = () => setIsPlaying(false);
-      await audio.play();
-    } catch (error) {
-      console.error('Error playing audio:', error);
-      setIsPlaying(false);
+      onSpeak(message);
+      // Reset playing state after a delay (approximate speech duration)
+      setTimeout(() => setIsPlaying(false), Math.max(2000, message.length * 50));
     }
   };
 
@@ -64,12 +61,12 @@ export const MessageBubble = ({
           </p>
           
           {/* Prominent speaker section for assistant messages */}
-          {!isUser && (
+          {!isUser && onSpeak && (
             <div className="absolute -right-3 top-1/2 transform -translate-y-1/2">
               <Button
                 variant="default"
                 size="sm"
-                onClick={playAudio}
+                onClick={handleSpeak}
                 disabled={isPlaying}
                 className="w-12 h-12 rounded-full bg-yellow-400 hover:bg-yellow-500 text-gray-800 shadow-lg border-2 border-white"
               >
