@@ -88,7 +88,7 @@ export const AudioPlayer = ({ audioBlob, onAudioProcessed, selectedLanguage }: A
         },
         body: JSON.stringify({
           file_base64: base64Audio,
-          language: selectedLanguage
+          language: selectedLanguage.split('-')[0] 
         })
       });
 
