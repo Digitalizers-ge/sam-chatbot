@@ -129,9 +129,9 @@ const Index = () => {
       const result = await response.json();
       console.log('Polly API response:', result);
 
-      if (result.mp3_url) {
+      if (result.audio_url) {
         // Create audio element and play the MP3
-        const audio = new Audio(result.mp3_url);
+        const audio = new Audio(result.audio_url);
         audio.play().catch(error => {
           console.error('Error playing audio:', error);
           toast({
