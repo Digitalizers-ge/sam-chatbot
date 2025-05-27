@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Mic, MicOff, Square } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -22,6 +21,7 @@ export const VoiceOrb = ({
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordedChunksRef = useRef<Blob[]>([]);
+  const streamRef = useRef<MediaStream | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -30,27 +30,65 @@ export const VoiceOrb = ({
 
   const startRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
+      console.log('Starting recording...');
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          sampleRate: 44100
+        }
+      });
+      
+      streamRef.current = stream;
+      console.log('Got media stream:', stream);
+
+      // Try different formats for better compatibility
+      let options: MediaRecorderOptions = {};
+      if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+        options.mimeType = 'audio/webm;codecs=opus';
+      } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+        options.mimeType = 'audio/webm';
+      } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+        options.mimeType = 'audio/mp4';
+      }
+
+      console.log('Using mime type:', options.mimeType);
+
+      const mediaRecorder = new MediaRecorder(stream, options);
       mediaRecorderRef.current = mediaRecorder;
       recordedChunksRef.current = [];
 
       mediaRecorder.ondataavailable = (event) => {
+        console.log('Data available:', event.data.size);
         if (event.data.size > 0) {
           recordedChunksRef.current.push(event.data);
         }
       };
 
       mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(recordedChunksRef.current, { type: 'audio/webm' });
+        console.log('Recording stopped, chunks:', recordedChunksRef.current.length);
+        const mimeType = options.mimeType || 'audio/webm';
+        const audioBlob = new Blob(recordedChunksRef.current, { type: mimeType });
+        console.log('Created blob:', audioBlob.size, audioBlob.type);
+        
         if (onAudioRecorded) {
           onAudioRecorded(audioBlob);
         }
-        stream.getTracks().forEach(track => track.stop());
+        
+        // Clean up stream
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach(track => track.stop());
+          streamRef.current = null;
+        }
       };
 
-      mediaRecorder.start();
+      mediaRecorder.onerror = (event) => {
+        console.error('MediaRecorder error:', event);
+      };
+
+      mediaRecorder.start(100); // Collect data every 100ms
       setIsRecording(true);
+      console.log('Recording started');
     } catch (error) {
       console.error('Error starting recording:', error);
       toast({
@@ -62,6 +100,7 @@ export const VoiceOrb = ({
   };
 
   const stopRecording = () => {
+    console.log('Stopping recording...');
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
