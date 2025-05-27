@@ -147,7 +147,7 @@ const Index = () => {
   'wo-SN': 'wo',
   'zu-ZA': 'zu'
 };
-
+};
   const speakText = (text: string) => {
     if ('speechSynthesis' in window) {
       // Stop any ongoing speech
