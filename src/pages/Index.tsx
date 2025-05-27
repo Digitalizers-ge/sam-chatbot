@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { VoiceOrb } from '@/components/VoiceOrb';
@@ -112,25 +111,82 @@ const Index = () => {
     if ('speechSynthesis' in window) {
       // Stop any ongoing speech
       speechSynthesis.cancel();
+      
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = getLanguageCode(selectedLanguage);
-      utterance.rate = 0.9;
-      utterance.pitch = 1;
-      utterance.onstart = () => {
-        console.log('Speech started');
+      
+      // Get the target language code
+      const targetLang = selectedLanguage || 'en-US';
+      utterance.lang = targetLang;
+      
+      // Wait for voices to be loaded, then find the best English voice
+      const setVoiceAndSpeak = () => {
+        const voices = speechSynthesis.getVoices();
+        
+        if (voices.length > 0) {
+          // For English, prioritize native English voices
+          if (targetLang.startsWith('en') || !selectedLanguage) {
+            const englishVoices = voices.filter(voice => 
+              voice.lang.startsWith('en') && voice.localService !== false
+            );
+            
+            // Prefer US English voices for clearest pronunciation
+            const usEnglishVoice = englishVoices.find(voice => 
+              voice.lang === 'en-US' || voice.lang === 'en-us'
+            );
+            
+            if (usEnglishVoice) {
+              utterance.voice = usEnglishVoice;
+              console.log('Using English voice:', usEnglishVoice.name, usEnglishVoice.lang);
+            } else if (englishVoices.length > 0) {
+              utterance.voice = englishVoices[0];
+              console.log('Using fallback English voice:', englishVoices[0].name, englishVoices[0].lang);
+            }
+          } else {
+            // For other languages, try to find matching voice
+            const matchingVoice = voices.find(voice => 
+              voice.lang === targetLang || voice.lang.startsWith(getLanguageCode(targetLang))
+            );
+            
+            if (matchingVoice) {
+              utterance.voice = matchingVoice;
+              console.log('Using matching voice:', matchingVoice.name, matchingVoice.lang);
+            }
+          }
+        }
+        
+        utterance.rate = 0.9;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+        
+        utterance.onstart = () => {
+          console.log('Speech started');
+        };
+        
+        utterance.onend = () => {
+          console.log('Speech ended');
+        };
+        
+        utterance.onerror = event => {
+          console.error('Speech error:', event.error);
+          toast({
+            title: "Speech Error",
+            description: "Unable to play audio. Please try again.",
+            variant: "destructive"
+          });
+        };
+        
+        speechSynthesis.speak(utterance);
       };
-      utterance.onend = () => {
-        console.log('Speech ended');
-      };
-      utterance.onerror = event => {
-        console.error('Speech error:', event.error);
-        toast({
-          title: "Speech Error",
-          description: "Unable to play audio. Please try again.",
-          variant: "destructive"
-        });
-      };
-      speechSynthesis.speak(utterance);
+
+      // If voices aren't loaded yet, wait for them
+      if (speechSynthesis.getVoices().length === 0) {
+        speechSynthesis.onvoiceschanged = () => {
+          setVoiceAndSpeak();
+        };
+      } else {
+        setVoiceAndSpeak();
+      }
+      
     } else {
       toast({
         title: "Not Supported",
