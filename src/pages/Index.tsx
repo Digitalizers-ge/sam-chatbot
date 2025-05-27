@@ -111,7 +111,7 @@ const Index = () => {
     try {
       console.log('Sending text to Amazon Polly:', text);
       
-      const response = await fetch('https://c3veuw7me0.execute-api.eu-central-1.amazonaws.com/prod/polly', {
+      const response = await fetch('https://z1eznxs6nb.execute-api.eu-north-1.amazonaws.com/audio', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
