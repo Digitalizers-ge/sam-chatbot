@@ -118,7 +118,7 @@ const Index = () => {
         },
         body: JSON.stringify({
           message: text,
-          lang: 'english'
+          lang: 'en'
         })
       });
 
