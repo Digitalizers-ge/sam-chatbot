@@ -1,71 +1,52 @@
-import { useState, useCallback } from 'react';
+
+import { useState } from 'react';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { VoiceOrb } from '@/components/VoiceOrb';
-import { ConversationHistory, Message } from '@/components/ConversationHistory';
+import { ConversationBox } from '@/components/ConversationBox';
+import { SourcesBox } from '@/components/SourcesBox';
 import { Button } from '@/components/ui/button';
 import { Volume2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+export interface Message {
+  id: string;
+  text: string;
+  isUser: boolean;
+  timestamp: Date;
+}
+
 const Index = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('en');
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [isListening, setIsListening] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
   const [voiceMode, setVoiceMode] = useState(true);
   const { toast } = useToast();
 
-  // Initialize speech recognition
-  const initializeSpeechRecognition = useCallback(() => {
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      toast({
-        title: "Voice not supported",
-        description: "Please use a compatible browser for voice input.",
-        variant: "destructive",
-      });
-      return null;
-    }
-
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
-    
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.lang = getLanguageCode(selectedLanguage);
-
-    recognition.onstart = () => {
-      console.log('Speech recognition started');
-    };
-
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
-      const transcript = event.results[0][0].transcript;
-      console.log('Speech recognition result:', transcript);
-      
-      setIsListening(false);
-      
-      if (transcript.trim()) {
-        handleUserMessage(transcript);
-      }
-    };
-
-    recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
-      console.error('Speech recognition error:', event.error);
-      setIsListening(false);
-      
-      toast({
-        title: "Voice input error",
-        description: "Please try speaking again.",
-        variant: "destructive",
-      });
-    };
-
-    recognition.onend = () => {
-      console.log('Speech recognition ended');
-      setIsListening(false);
-    };
-
-    return recognition;
-  }, [selectedLanguage]);
+  // Mock conversation data
+  const [messages] = useState<Message[]>([
+    {
+      id: '1',
+      text: "What are my rights as an asylum seeker in Europe?",
+      isUser: true,
+      timestamp: new Date(Date.now() - 300000), // 5 minutes ago
+    },
+    {
+      id: '2',
+      text: "As an asylum seeker in Europe, you have several fundamental rights. You have the right to remain in the country while your application is being processed. You're entitled to basic accommodation, food, and healthcare. You also have the right to legal assistance and an interpreter during your asylum procedure. Additionally, you cannot be returned to a country where you face persecution - this is called the principle of non-refoulement.",
+      isUser: false,
+      timestamp: new Date(Date.now() - 240000), // 4 minutes ago
+    },
+    {
+      id: '3',
+      text: "How long does the asylum process usually take?",
+      isUser: true,
+      timestamp: new Date(Date.now() - 120000), // 2 minutes ago
+    },
+    {
+      id: '4',
+      text: "The asylum process duration varies significantly across EU countries. Generally, the first instance decision should be made within 6 months, but this can be extended to 21 months in complex cases. Some countries process applications faster, while others may take longer due to backlogs. During this time, you'll receive regular updates about your case status.",
+      isUser: false,
+      timestamp: new Date(Date.now() - 60000), // 1 minute ago
+    },
+  ]);
 
   const getLanguageCode = (langCode: string): string => {
     const langMap: Record<string, string> = {
@@ -83,187 +64,93 @@ const Index = () => {
     return langMap[langCode] || 'en-US';
   };
 
-  const handleUserMessage = async (text: string) => {
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      text,
-      isUser: true,
-      timestamp: new Date(),
-    };
-    
-    setMessages(prev => [...prev, userMessage]);
-    setIsProcessing(true);
-
-    try {
-      // Simulate API call to AWS Gateway
-      await simulateAPICall(text, selectedLanguage);
-    } catch (error) {
-      console.error('Error processing message:', error);
+  const speakText = (text: string) => {
+    if ('speechSynthesis' in window) {
+      // Stop any ongoing speech
+      speechSynthesis.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = getLanguageCode(selectedLanguage);
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      
+      utterance.onstart = () => {
+        console.log('Speech started');
+      };
+      
+      utterance.onend = () => {
+        console.log('Speech ended');
+      };
+      
+      utterance.onerror = (event) => {
+        console.error('Speech error:', event.error);
+        toast({
+          title: "Speech Error",
+          description: "Unable to play audio. Please try again.",
+          variant: "destructive",
+        });
+      };
+      
+      speechSynthesis.speak(utterance);
+    } else {
       toast({
-        title: "Processing error",
-        description: "Please try your question again.",
+        title: "Not Supported",
+        description: "Text-to-speech is not supported in your browser.",
         variant: "destructive",
       });
-    } finally {
-      setIsProcessing(false);
     }
-  };
-
-  const simulateAPICall = async (userText: string, language: string) => {
-    // Simulate API processing time
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // Simulate SAM's response
-    const responses = [
-      "I understand you're seeking information about asylum rights. Let me help you with that. In Europe, you have the right to apply for asylum if you're fleeing persecution in your home country.",
-      "Thank you for your question about legal assistance. I'm here to provide clear, trustworthy information. You have the right to legal representation during your asylum process.",
-      "I hear your concern, and I want to help. Regarding housing rights for asylum seekers, each EU country has specific regulations that protect your right to accommodation during the application process.",
-    ];
-    
-    const response = responses[Math.floor(Math.random() * responses.length)];
-    
-    const samMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      text: response,
-      isUser: false,
-      timestamp: new Date(),
-      audioUrl: voiceMode ? '/placeholder-audio.mp3' : undefined, // Would be actual audio URL from API
-    };
-    
-    setMessages(prev => [...prev, samMessage]);
-    
-    // If voice mode is enabled, speak the response
-    if (voiceMode && 'speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(response);
-      utterance.lang = getLanguageCode(language);
-      speechSynthesis.speak(utterance);
-    }
-  };
-
-  const startListening = () => {
-    const newRecognition = initializeSpeechRecognition();
-    if (newRecognition) {
-      setRecognition(newRecognition);
-      setIsListening(true);
-      newRecognition.start();
-    }
-  };
-
-  const stopListening = () => {
-    if (recognition) {
-      recognition.stop();
-    }
-    setIsListening(false);
-  };
-
-  const handleReplay = (messageId: string) => {
-    const message = messages.find(m => m.id === messageId);
-    if (message && message.audioUrl && 'speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(message.text);
-      utterance.lang = getLanguageCode(selectedLanguage);
-      speechSynthesis.speak(utterance);
-    }
-  };
-
-  const handleRephrase = (messageId: string) => {
-    const message = messages.find(m => m.id === messageId);
-    if (message) {
-      // Find the user message that preceded this SAM response
-      const messageIndex = messages.findIndex(m => m.id === messageId);
-      if (messageIndex > 0) {
-        const userMessage = messages[messageIndex - 1];
-        if (userMessage.isUser) {
-          handleUserMessage(userMessage.text);
-        }
-      }
-    }
-  };
-
-  const handleFeedback = (messageId: string, isPositive: boolean) => {
-    console.log(`Feedback for message ${messageId}: ${isPositive ? 'positive' : 'negative'}`);
-    toast({
-      title: "Thank you",
-      description: "Your feedback helps SAM provide better assistance.",
-    });
   };
 
   return (
     <div className="min-h-screen sam-gradient-bg">
-      <div className="max-w-2xl mx-auto px-4 py-8">
-        {messages.length === 0 ? (
-          /* Welcome Screen */
-          <div className="flex flex-col items-center justify-center min-h-screen text-center space-y-8">
-            <div className="space-y-4">
-              <h1 className="text-5xl md:text-6xl font-bold text-gray-800">SAM</h1>
-              <p className="text-xl text-gray-600">Ask. Listen. Understand.</p>
-            </div>
-            
-            <VoiceOrb
-              isListening={isListening}
-              isProcessing={isProcessing}
-              onStartListening={startListening}
-              onStopListening={stopListening}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Header with SAM title and controls */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col items-center">
+            <h1 className="text-4xl font-bold text-gray-800 mb-2">SAM</h1>
+            <p className="text-lg text-gray-600">Ask. Listen. Understand.</p>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <LanguageSelector
+              selectedLanguage={selectedLanguage}
+              onLanguageChange={setSelectedLanguage}
+            />
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setVoiceMode(!voiceMode)}
+              className={`rounded-full w-12 h-12 ${voiceMode ? 'bg-blue-100' : 'bg-gray-100'}`}
+            >
+              <Volume2 className="w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Main content area */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Conversation and Voice Orb */}
+          <div className="lg:col-span-2 space-y-6">
+            <ConversationBox 
+              messages={messages} 
+              onSpeak={speakText}
             />
             
-            <div className="flex items-center space-x-6">
-              <LanguageSelector
-                selectedLanguage={selectedLanguage}
-                onLanguageChange={setSelectedLanguage}
-              />
-              
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setVoiceMode(!voiceMode)}
-                className={`rounded-full w-12 h-12 ${voiceMode ? 'bg-blue-100' : 'bg-gray-100'}`}
-              >
-                <Volume2 className="w-5 h-5" />
-              </Button>
-            </div>
-          </div>
-        ) : (
-          /* Conversation View */
-          <div className="flex flex-col h-screen">
-            {/* Header with SAM title and controls */}
-            <div className="flex items-center justify-between py-4 border-b border-white/20">
-              <h1 className="text-2xl font-bold text-gray-800">SAM</h1>
-              <div className="flex items-center space-x-4">
-                <LanguageSelector
-                  selectedLanguage={selectedLanguage}
-                  onLanguageChange={setSelectedLanguage}
-                />
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={() => setVoiceMode(!voiceMode)}
-                  className={`rounded-full w-10 h-10 ${voiceMode ? 'bg-blue-100' : 'bg-gray-100'}`}
-                >
-                  <Volume2 className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-
-            {/* Conversation History */}
-            <div className="flex-1 overflow-y-auto py-4">
-              <ConversationHistory
-                messages={messages}
-                onReplay={handleReplay}
-                onRephrase={handleRephrase}
-                onFeedback={handleFeedback}
-              />
-            </div>
-
-            {/* Voice Orb at bottom */}
-            <div className="py-6 flex justify-center">
+            <div className="flex justify-center">
               <VoiceOrb
-                isListening={isListening}
-                isProcessing={isProcessing}
-                onStartListening={startListening}
-                onStopListening={stopListening}
+                isListening={false}
+                isProcessing={false}
+                onStartListening={() => console.log('Start listening')}
+                onStopListening={() => console.log('Stop listening')}
               />
             </div>
           </div>
-        )}
+
+          {/* Sources and Resources */}
+          <div className="lg:col-span-1">
+            <SourcesBox />
+          </div>
+        </div>
       </div>
     </div>
   );
