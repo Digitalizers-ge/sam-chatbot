@@ -107,90 +107,48 @@ const Index = () => {
     return langMap[langCode] || 'en';
   };
 
-  const speakText = (text: string) => {
-    if ('speechSynthesis' in window) {
-      // Stop any ongoing speech
-      speechSynthesis.cancel();
+  const speakText = async (text: string) => {
+    try {
+      console.log('Sending text to Amazon Polly:', text);
       
-      const utterance = new SpeechSynthesisUtterance(text);
-      
-      // Get the target language code
-      const targetLang = selectedLanguage || 'en-US';
-      utterance.lang = targetLang;
-      
-      // Wait for voices to be loaded, then find the best English voice
-      const setVoiceAndSpeak = () => {
-        const voices = speechSynthesis.getVoices();
-        
-        if (voices.length > 0) {
-          // For English, prioritize native English voices
-          if (targetLang.startsWith('en') || !selectedLanguage) {
-            const englishVoices = voices.filter(voice => 
-              voice.lang.startsWith('en') && voice.localService !== false
-            );
-            
-            // Prefer US English voices for clearest pronunciation
-            const usEnglishVoice = englishVoices.find(voice => 
-              voice.lang === 'en-US' || voice.lang === 'en-us'
-            );
-            
-            if (usEnglishVoice) {
-              utterance.voice = usEnglishVoice;
-              console.log('Using English voice:', usEnglishVoice.name, usEnglishVoice.lang);
-            } else if (englishVoices.length > 0) {
-              utterance.voice = englishVoices[0];
-              console.log('Using fallback English voice:', englishVoices[0].name, englishVoices[0].lang);
-            }
-          } else {
-            // For other languages, try to find matching voice
-            const matchingVoice = voices.find(voice => 
-              voice.lang === targetLang || voice.lang.startsWith(getLanguageCode(targetLang))
-            );
-            
-            if (matchingVoice) {
-              utterance.voice = matchingVoice;
-              console.log('Using matching voice:', matchingVoice.name, matchingVoice.lang);
-            }
-          }
-        }
-        
-        utterance.rate = 0.9;
-        utterance.pitch = 1;
-        utterance.volume = 1;
-        
-        utterance.onstart = () => {
-          console.log('Speech started');
-        };
-        
-        utterance.onend = () => {
-          console.log('Speech ended');
-        };
-        
-        utterance.onerror = event => {
-          console.error('Speech error:', event.error);
+      const response = await fetch('https://c3veuw7me0.execute-api.eu-central-1.amazonaws.com/prod/polly', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: text,
+          lang: 'english'
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Polly API request failed: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Polly API response:', result);
+
+      if (result.mp3_url) {
+        // Create audio element and play the MP3
+        const audio = new Audio(result.mp3_url);
+        audio.play().catch(error => {
+          console.error('Error playing audio:', error);
           toast({
-            title: "Speech Error",
+            title: "Audio Error",
             description: "Unable to play audio. Please try again.",
             variant: "destructive"
           });
-        };
-        
-        speechSynthesis.speak(utterance);
-      };
-
-      // If voices aren't loaded yet, wait for them
-      if (speechSynthesis.getVoices().length === 0) {
-        speechSynthesis.onvoiceschanged = () => {
-          setVoiceAndSpeak();
-        };
+        });
       } else {
-        setVoiceAndSpeak();
+        throw new Error('No MP3 URL in response');
       }
-      
-    } else {
+
+    } catch (error) {
+      console.error('Error with Polly TTS:', error);
       toast({
-        title: "Not Supported",
-        description: "Text-to-speech is not supported in your browser.",
+        title: "Speech Error",
+        description: "Unable to generate speech. Please try again.",
         variant: "destructive"
       });
     }
