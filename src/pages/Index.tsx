@@ -5,19 +5,19 @@ import { ConversationBox } from '@/components/ConversationBox';
 import { SourcesBox } from '@/components/SourcesBox';
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { useToast } from '@/hooks/use-toast';
-
 export interface Message {
   id: string;
   text: string;
   isUser: boolean;
   timestamp: Date;
 }
-
 const Index = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [voiceMode, setVoiceMode] = useState(true);
   const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
 
   // Mock conversation data
   const [messages] = useState<Message[]>([{
@@ -87,18 +87,15 @@ const Index = () => {
       });
     }
   };
-
   const handleAudioRecorded = (audioBlob: Blob) => {
     setRecordedAudio(audioBlob);
     console.log('Audio recorded:', audioBlob);
     toast({
       title: "Recording Complete",
-      description: "Your audio has been recorded successfully.",
+      description: "Your audio has been recorded successfully."
     });
   };
-
-  return (
-    <div className="min-h-screen sam-gradient-bg">
+  return <div className="min-h-screen sam-gradient-bg">
       {/* Header at the top */}
       <div className="w-full px-4 py-6">
         <div className="max-w-7xl mx-auto">
@@ -106,7 +103,7 @@ const Index = () => {
             {/* Title and subtitle vertically stacked */}
             <div className="flex flex-col items-center mb-6">
               <h1 className="text-4xl font-bold text-gray-800 mb-2">SAM</h1>
-              <p className="text-lg text-gray-600 text-center">Asylum Procedures. In your language.</p>
+              <p className="text-lg text-gray-600 text-center">Ask anything about asylum in Europe</p>
             </div>
             
             {/* Language selector only */}
@@ -121,13 +118,7 @@ const Index = () => {
       <div className="max-w-7xl mx-auto px-4 pb-8">
         {/* Voice Orb in its own centered row */}
         <div className="flex flex-col items-center mb-8 py-[34px]">
-          <VoiceOrb 
-            isListening={false} 
-            isProcessing={false} 
-            onStartListening={() => console.log('Start listening')} 
-            onStopListening={() => console.log('Stop listening')}
-            onAudioRecorded={handleAudioRecorded}
-          />
+          <VoiceOrb isListening={false} isProcessing={false} onStartListening={() => console.log('Start listening')} onStopListening={() => console.log('Stop listening')} onAudioRecorded={handleAudioRecorded} />
           <AudioPlayer audioBlob={recordedAudio} />
         </div>
         
@@ -144,8 +135,6 @@ const Index = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
