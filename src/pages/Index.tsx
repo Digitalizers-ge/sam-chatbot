@@ -189,7 +189,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen sam-gradient-bg">
-      {/* Main Content */}
       <div className="max-w-2xl mx-auto px-4 py-8">
         {messages.length === 0 ? (
           /* Welcome Screen */
@@ -224,22 +223,43 @@ const Index = () => {
           </div>
         ) : (
           /* Conversation View */
-          <div className="space-y-6">
-            <div className="text-center">
-              <VoiceOrb
-                isListening={isListening}
-                isProcessing={isProcessing}
-                onStartListening={startListening}
-                onStopListening={stopListening}
-              />
+          <div className="flex flex-col h-screen">
+            {/* Header with SAM title and controls */}
+            <div className="flex items-center justify-between py-4 border-b border-white/20">
+              <h1 className="text-2xl font-bold text-gray-800">SAM</h1>
+              <div className="flex items-center space-x-4">
+                <LanguageSelector
+                  selectedLanguage={selectedLanguage}
+                  onLanguageChange={setSelectedLanguage}
+                />
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setVoiceMode(!voiceMode)}
+                  className={`rounded-full w-10 h-10 ${voiceMode ? 'bg-blue-100' : 'bg-gray-100'}`}
+                >
+                  <Volume2 className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
-            
-            <div className="sam-glass rounded-2xl p-6 max-h-[60vh] overflow-y-auto">
+
+            {/* Conversation History */}
+            <div className="flex-1 overflow-y-auto py-4">
               <ConversationHistory
                 messages={messages}
                 onReplay={handleReplay}
                 onRephrase={handleRephrase}
                 onFeedback={handleFeedback}
+              />
+            </div>
+
+            {/* Voice Orb at bottom */}
+            <div className="py-6 flex justify-center">
+              <VoiceOrb
+                isListening={isListening}
+                isProcessing={isProcessing}
+                onStartListening={startListening}
+                onStopListening={stopListening}
               />
             </div>
           </div>
