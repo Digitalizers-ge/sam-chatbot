@@ -99,9 +99,9 @@ export const AudioPlayer = ({ audioBlob, onAudioProcessed, selectedLanguage }: A
       const result = await response.json();
       console.log('API response:', result);
 
-      if (result.message) {
-        // Create a user message for the audio input and assistant response
-        onAudioProcessed?.("Audio message sent", result.message);
+      if (result.message && result.transcript) {
+        // Use the transcript from the API response as the user message
+        onAudioProcessed?.(result.transcript, result.message);
         toast({
           title: "Audio Processed",
           description: "Your audio has been successfully processed."
