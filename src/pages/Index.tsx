@@ -1,10 +1,9 @@
-
 import { useState, useCallback } from 'react';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { VoiceOrb } from '@/components/VoiceOrb';
 import { ConversationHistory, Message } from '@/components/ConversationHistory';
 import { Button } from '@/components/ui/button';
-import { Accessibility } from 'lucide-react';
+import { Volume2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
@@ -190,45 +189,16 @@ const Index = () => {
 
   return (
     <div className="min-h-screen sam-gradient-bg">
-      {/* Header */}
-      <div className="sticky top-0 z-40 sam-glass border-b border-white/20">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
-                <span className="text-white font-bold">S</span>
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-gray-800">SAM</h1>
-                <p className="text-sm text-gray-600">Legal Assistant</p>
-              </div>
+      {/* Main Content */}
+      <div className="max-w-2xl mx-auto px-4 py-8">
+        {messages.length === 0 ? (
+          /* Welcome Screen */
+          <div className="flex flex-col items-center justify-center min-h-screen text-center space-y-8">
+            <div className="space-y-4">
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-800">SAM</h1>
+              <p className="text-xl text-gray-600">Ask. Listen. Understand.</p>
             </div>
             
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setVoiceMode(!voiceMode)}
-                className={`rounded-full sam-glass ${voiceMode ? 'bg-blue-100' : ''}`}
-              >
-                <Accessibility className="w-4 h-4 mr-2" />
-                {voiceMode ? 'Voice On' : 'Voice Off'}
-              </Button>
-              
-              <LanguageSelector
-                selectedLanguage={selectedLanguage}
-                onLanguageChange={setSelectedLanguage}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 min-h-[calc(100vh-140px)]">
-          {/* Voice Interface */}
-          <div className="lg:col-span-1 flex flex-col items-center justify-center">
             <VoiceOrb
               isListening={isListening}
               isProcessing={isProcessing}
@@ -236,22 +206,35 @@ const Index = () => {
               onStopListening={stopListening}
             />
             
-            {messages.length === 0 && (
-              <div className="mt-8 text-center max-w-sm">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  Welcome to SAM
-                </h2>
-                <p className="text-gray-600 leading-relaxed">
-                  I'm here to help you understand your legal rights and asylum options in Europe. 
-                  Speak naturally in your language, and I'll provide clear, compassionate guidance.
-                </p>
-              </div>
-            )}
+            <div className="flex items-center space-x-6">
+              <LanguageSelector
+                selectedLanguage={selectedLanguage}
+                onLanguageChange={setSelectedLanguage}
+              />
+              
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setVoiceMode(!voiceMode)}
+                className={`rounded-full w-12 h-12 ${voiceMode ? 'bg-blue-100' : 'bg-gray-100'}`}
+              >
+                <Volume2 className="w-5 h-5" />
+              </Button>
+            </div>
           </div>
-
-          {/* Conversation History */}
-          <div className="lg:col-span-2">
-            <div className="sam-glass rounded-2xl p-6 min-h-[500px] max-h-[600px] overflow-y-auto">
+        ) : (
+          /* Conversation View */
+          <div className="space-y-6">
+            <div className="text-center">
+              <VoiceOrb
+                isListening={isListening}
+                isProcessing={isProcessing}
+                onStartListening={startListening}
+                onStopListening={stopListening}
+              />
+            </div>
+            
+            <div className="sam-glass rounded-2xl p-6 max-h-[60vh] overflow-y-auto">
               <ConversationHistory
                 messages={messages}
                 onReplay={handleReplay}
@@ -260,7 +243,7 @@ const Index = () => {
               />
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
