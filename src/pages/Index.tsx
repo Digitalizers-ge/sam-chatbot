@@ -3,6 +3,7 @@ import { LanguageSelector } from '@/components/LanguageSelector';
 import { VoiceOrb } from '@/components/VoiceOrb';
 import { ConversationBox } from '@/components/ConversationBox';
 import { SourcesBox } from '@/components/SourcesBox';
+import { AudioPlayer } from '@/components/AudioPlayer';
 import { useToast } from '@/hooks/use-toast';
 
 export interface Message {
@@ -15,6 +16,7 @@ export interface Message {
 const Index = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [voiceMode, setVoiceMode] = useState(true);
+  const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
   const { toast } = useToast();
 
   // Mock conversation data
@@ -85,6 +87,16 @@ const Index = () => {
       });
     }
   };
+
+  const handleAudioRecorded = (audioBlob: Blob) => {
+    setRecordedAudio(audioBlob);
+    console.log('Audio recorded:', audioBlob);
+    toast({
+      title: "Recording Complete",
+      description: "Your audio has been recorded successfully.",
+    });
+  };
+
   return (
     <div className="min-h-screen sam-gradient-bg">
       {/* Header at the top */}
@@ -108,8 +120,15 @@ const Index = () => {
       {/* Main content area */}
       <div className="max-w-7xl mx-auto px-4 pb-8">
         {/* Voice Orb in its own centered row */}
-        <div className="flex justify-center mb-8 py-[34px]">
-          <VoiceOrb isListening={false} isProcessing={false} onStartListening={() => console.log('Start listening')} onStopListening={() => console.log('Stop listening')} />
+        <div className="flex flex-col items-center mb-8 py-[34px]">
+          <VoiceOrb 
+            isListening={false} 
+            isProcessing={false} 
+            onStartListening={() => console.log('Start listening')} 
+            onStopListening={() => console.log('Stop listening')}
+            onAudioRecorded={handleAudioRecorded}
+          />
+          <AudioPlayer audioBlob={recordedAudio} />
         </div>
         
         {/* Conversation and Sources in equal height row */}
