@@ -1,16 +1,21 @@
 
 import { useState, useRef, useEffect } from 'react';
-import { Play, Pause } from 'lucide-react';
+import { Play, Pause, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 interface AudioPlayerProps {
   audioBlob: Blob | null;
+  onAudioProcessed?: (originalText: string, translatedText: string) => void;
+  selectedLanguage: string;
 }
 
-export const AudioPlayer = ({ audioBlob }: AudioPlayerProps) => {
+export const AudioPlayer = ({ audioBlob, onAudioProcessed, selectedLanguage }: AudioPlayerProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (audioBlob) {
@@ -32,6 +37,89 @@ export const AudioPlayer = ({ audioBlob }: AudioPlayerProps) => {
       };
     }
   }, [audioBlob]);
+
+  const convertToWav = async (audioBlob: Blob): Promise<Blob> => {
+    // For now, we'll return the original blob as browsers typically handle WebM well
+    // In a production environment, you might want to use a library like lamejs for proper WAV conversion
+    return audioBlob;
+  };
+
+  const blobToBase64 = (blob: Blob): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result as string;
+        // Remove the data URL prefix to get just the base64 string
+        const base64 = result.split(',')[1];
+        resolve(base64);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  const sendAudioToAPI = async () => {
+    if (!audioBlob) {
+      toast({
+        title: "No Audio",
+        description: "Please record audio first.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsProcessing(true);
+    console.log('Starting audio processing...');
+
+    try {
+      // Convert to WAV (for now, using original blob)
+      const wavBlob = await convertToWav(audioBlob);
+      console.log('Audio converted to WAV');
+
+      // Convert to base64
+      const base64Audio = await blobToBase64(wavBlob);
+      console.log('Audio converted to base64, length:', base64Audio.length);
+
+      // Send to API
+      const response = await fetch('https://c3veuw7me0.execute-api.eu-central-1.amazonaws.com/prod/ask', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          file_base64: base64Audio,
+          language: selectedLanguage
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('API response:', result);
+
+      if (result.original_text && result.translated_text) {
+        onAudioProcessed?.(result.original_text, result.translated_text);
+        toast({
+          title: "Audio Processed",
+          description: "Your audio has been successfully processed."
+        });
+      } else {
+        throw new Error('Invalid response format');
+      }
+
+    } catch (error) {
+      console.error('Error processing audio:', error);
+      toast({
+        title: "Processing Error",
+        description: "Failed to process audio. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   const handlePlayPause = () => {
     if (!audioBlob || !audioRef.current || !audioUrl) {
@@ -76,7 +164,7 @@ export const AudioPlayer = ({ audioBlob }: AudioPlayerProps) => {
   }
 
   return (
-    <div className="flex items-center justify-center p-4">
+    <div className="flex flex-col items-center justify-center p-4 space-y-3">
       <audio
         ref={audioRef}
         src={audioUrl || ''}
@@ -86,20 +174,35 @@ export const AudioPlayer = ({ audioBlob }: AudioPlayerProps) => {
         onCanPlay={() => console.log('Audio can play')}
         className="hidden"
       />
-      <Button
-        onClick={handlePlayPause}
-        variant="outline"
-        size="sm"
-        className="flex items-center gap-2"
-      >
-        {isPlaying ? (
-          <Pause className="w-4 h-4" />
-        ) : (
-          <Play className="w-4 h-4" />
-        )}
-        {isPlaying ? 'Pause' : 'Play'} Recording
-      </Button>
-      <div className="ml-2 text-xs text-gray-500">
+      
+      <div className="flex items-center space-x-3">
+        <Button
+          onClick={handlePlayPause}
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-2"
+        >
+          {isPlaying ? (
+            <Pause className="w-4 h-4" />
+          ) : (
+            <Play className="w-4 h-4" />
+          )}
+          {isPlaying ? 'Pause' : 'Play'} Recording
+        </Button>
+        
+        <Button
+          onClick={sendAudioToAPI}
+          disabled={isProcessing}
+          variant="default"
+          size="sm"
+          className="flex items-center gap-2"
+        >
+          <Send className="w-4 h-4" />
+          {isProcessing ? 'Processing...' : 'Send Audio'}
+        </Button>
+      </div>
+      
+      <div className="text-xs text-gray-500">
         Size: {Math.round(audioBlob.size / 1024)}KB
       </div>
     </div>
