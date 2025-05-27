@@ -6,14 +6,12 @@ import { SourcesBox } from '@/components/SourcesBox';
 import { Button } from '@/components/ui/button';
 import { Volume2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
 export interface Message {
   id: string;
   text: string;
   isUser: boolean;
   timestamp: Date;
 }
-
 const Index = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [voiceMode, setVoiceMode] = useState(true);
@@ -114,7 +112,7 @@ const Index = () => {
       {/* Main content area */}
       <div className="max-w-7xl mx-auto px-4 pb-8">
         {/* Voice Orb in its own centered row */}
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-8 py-[34px]">
           <VoiceOrb isListening={false} isProcessing={false} onStartListening={() => console.log('Start listening')} onStopListening={() => console.log('Stop listening')} />
         </div>
         
