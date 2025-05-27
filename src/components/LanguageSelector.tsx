@@ -136,7 +136,7 @@ export const LanguageSelector = ({ selectedLanguage, onLanguageChange }: Languag
       </Button>
       
       {isOpen && (
-        <div className="absolute top-14 left-0 right-0 sam-glass rounded-2xl p-2 shadow-xl z-50 max-h-80 overflow-y-auto animate-fade-in">
+        <div className="absolute top-14 left-0 sam-glass rounded-2xl p-2 shadow-xl z-50 max-h-80 overflow-y-auto animate-fade-in w-max min-w-full max-w-xs">
           <div className="grid grid-cols-1 gap-1">
             {languages.map((language) => (
               <Button
@@ -146,7 +146,7 @@ export const LanguageSelector = ({ selectedLanguage, onLanguageChange }: Languag
                   onLanguageChange(language.code);
                   setIsOpen(false);
                 }}
-                className={`justify-start h-12 rounded-xl transition-all duration-200 ${
+                className={`justify-start h-12 rounded-xl transition-all duration-200 whitespace-nowrap ${
                   selectedLanguage === language.code 
                     ? 'bg-blue-100 text-blue-800' 
                     : 'hover:bg-white/70'
