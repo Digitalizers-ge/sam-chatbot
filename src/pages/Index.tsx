@@ -94,7 +94,7 @@ const Index = () => {
             {/* Title and subtitle vertically stacked */}
             <div className="flex flex-col items-center mb-6">
               <h1 className="text-4xl font-bold text-gray-800 mb-2">SAM</h1>
-              <p className="text-lg text-gray-600 text-center">Ask. Listen. Understand.</p>
+              <p className="text-lg text-gray-600 text-center">Asylum Procedures. In your language.</p>
             </div>
             
             {/* Language selector only */}
