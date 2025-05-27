@@ -102,33 +102,39 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen sam-gradient-bg flex">
-      <div className="max-w-7xl mx-auto px-4 py-8 w-full flex">
-        {/* Vertical Header */}
-        <div className="flex flex-col items-center justify-center mr-8 min-w-[200px]">
-          <div className="flex flex-col items-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-800 mb-2">SAM</h1>
-            <p className="text-lg text-gray-600 text-center">Ask. Listen. Understand.</p>
-          </div>
-          
-          <div className="flex flex-col items-center space-y-4">
-            <LanguageSelector
-              selectedLanguage={selectedLanguage}
-              onLanguageChange={setSelectedLanguage}
-            />
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setVoiceMode(!voiceMode)}
-              className={`rounded-full w-12 h-12 ${voiceMode ? 'bg-blue-100' : 'bg-gray-100'}`}
-            >
-              <Volume2 className="w-5 h-5" />
-            </Button>
+    <div className="min-h-screen sam-gradient-bg">
+      {/* Header at the top */}
+      <div className="w-full px-4 py-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col items-center">
+            {/* Title and subtitle vertically stacked */}
+            <div className="flex flex-col items-center mb-6">
+              <h1 className="text-4xl font-bold text-gray-800 mb-2">SAM</h1>
+              <p className="text-lg text-gray-600 text-center">Ask. Listen. Understand.</p>
+            </div>
+            
+            {/* Language selector and sound button in a row */}
+            <div className="flex items-center space-x-4">
+              <LanguageSelector
+                selectedLanguage={selectedLanguage}
+                onLanguageChange={setSelectedLanguage}
+              />
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setVoiceMode(!voiceMode)}
+                className={`rounded-full w-12 h-12 ${voiceMode ? 'bg-blue-100' : 'bg-gray-100'}`}
+              >
+                <Volume2 className="w-5 h-5" />
+              </Button>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* Main content area */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-1">
+      {/* Main content area */}
+      <div className="max-w-7xl mx-auto px-4 pb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[calc(100vh-200px)]">
           {/* Voice Orb and Conversation */}
           <div className="lg:col-span-2 flex flex-col space-y-6 h-full">
             <div className="flex justify-center">
