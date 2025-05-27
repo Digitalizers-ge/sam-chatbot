@@ -203,8 +203,8 @@ export const AudioPlayer = ({ audioBlob, onAudioProcessed, selectedLanguage }: A
         </Button>
       </div>
       
-      <div className="text-xs text-gray-500">
-        Size: {Math.round(audioBlob.size / 1024)}KB
+      <div className="text-xs text-gray-500 text-center max-w-xs">
+        We don't store any personal data - 100% confidential
       </div>
     </div>
   );
