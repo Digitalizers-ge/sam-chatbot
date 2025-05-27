@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { VoiceOrb } from '@/components/VoiceOrb';
@@ -9,34 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('en');
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      text: 'Hello SAM, I need help understanding my rights as an asylum seeker in Germany. Can you help me?',
-      isUser: true,
-      timestamp: new Date(Date.now() - 300000), // 5 minutes ago
-    },
-    {
-      id: '2',
-      text: 'Hello, I\'m here to help you understand your asylum rights in Germany. As an asylum seeker, you have several important rights: the right to remain in Germany while your application is processed, the right to legal representation, the right to an interpreter during proceedings, and the right to basic accommodation and healthcare. Would you like me to explain any of these rights in more detail?',
-      isUser: false,
-      timestamp: new Date(Date.now() - 280000), // 4 minutes 40 seconds ago
-      audioUrl: '/placeholder-audio.mp3',
-    },
-    {
-      id: '3',
-      text: 'Yes, can you tell me more about legal representation? Do I have to pay for a lawyer?',
-      isUser: true,
-      timestamp: new Date(Date.now() - 200000), // 3 minutes 20 seconds ago
-    },
-    {
-      id: '4',
-      text: 'In Germany, you have the right to legal representation during your asylum process. While you\'re not automatically provided with a free lawyer, there are several options available: Legal aid (Prozesskostenhilfe) may be available if you cannot afford a lawyer, many refugee support organizations offer free legal advice, and some lawyers specialize in asylum law and work on a pro bono basis. I recommend contacting your local refugee support center - they can connect you with appropriate legal assistance.',
-      isUser: false,
-      timestamp: new Date(Date.now() - 180000), // 3 minutes ago
-      audioUrl: '/placeholder-audio.mp3',
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isListening, setIsListening] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
