@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Play, Pause, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -99,8 +98,9 @@ export const AudioPlayer = ({ audioBlob, onAudioProcessed, selectedLanguage }: A
       const result = await response.json();
       console.log('API response:', result);
 
-      if (result.original_text && result.translated_text) {
-        onAudioProcessed?.(result.original_text, result.translated_text);
+      if (result.message) {
+        // Create a user message for the audio input and assistant response
+        onAudioProcessed?.("Audio message sent", result.message);
         toast({
           title: "Audio Processed",
           description: "Your audio has been successfully processed."
