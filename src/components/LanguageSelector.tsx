@@ -89,26 +89,35 @@ const languages: Language[] = [
 interface LanguageSelectorProps {
   selectedLanguage: string;
   onLanguageChange: (languageCode: string) => void;
+  hasError?: boolean;
 }
 
-export const LanguageSelector = ({ selectedLanguage, onLanguageChange }: LanguageSelectorProps) => {
+export const LanguageSelector = ({ selectedLanguage, onLanguageChange, hasError = false }: LanguageSelectorProps) => {
   const [isOpen, setIsOpen] = useState(false);
   
-  const selectedLang = languages.find(lang => lang.code === selectedLanguage) || languages.find(lang => lang.code === 'en-US') || languages[0];
+  const selectedLang = selectedLanguage ? languages.find(lang => lang.code === selectedLanguage) : null;
 
   return (
     <div className="relative">
       <Button
         variant="outline"
         onClick={() => setIsOpen(!isOpen)}
-        className="sam-glass rounded-full px-4 py-2 h-12 min-w-[120px] hover:bg-white/90 transition-all duration-300"
+        className={`sam-glass rounded-full px-4 py-2 h-12 min-w-[180px] hover:bg-white/90 transition-all duration-300 ${
+          hasError ? 'border-red-500 border-4 shadow-red-500/50 shadow-lg' : ''
+        }`}
       >
-        <span className="text-2xl mr-2">{selectedLang.flag}</span>
-        <span className="font-medium text-gray-700">{selectedLang.name}</span>
+        {selectedLang ? (
+          <>
+            <span className="text-2xl mr-2">{selectedLang.flag}</span>
+            <span className="font-medium text-gray-700">{selectedLang.name}</span>
+          </>
+        ) : (
+          <span className="font-medium text-gray-500">Select Language</span>
+        )}
       </Button>
       
       {isOpen && (
-        <div className="absolute top-14 left-0 sam-glass rounded-2xl p-2 shadow-xl z-50 max-h-80 overflow-y-auto animate-fade-in w-max min-w-full max-w-xs">
+        <div className="absolute top-14 left-0 sam-glass rounded-2xl p-2 shadow-xl z-50 max-h-80 overflow-y-auto animate-fade-in w-max min-w-full max-w-xs bg-white/95 backdrop-blur-sm">
           <div className="grid grid-cols-1 gap-1">
             {languages.map((language) => (
               <Button

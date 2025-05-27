@@ -14,9 +14,10 @@ export interface Message {
 }
 
 const Index = () => {
-  const [selectedLanguage, setSelectedLanguage] = useState('en-US');
+  const [selectedLanguage, setSelectedLanguage] = useState('');
   const [voiceMode, setVoiceMode] = useState(true);
   const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
+  const [languageError, setLanguageError] = useState(false);
   const { toast } = useToast();
 
   // Initialize with empty messages array
@@ -138,7 +139,37 @@ const Index = () => {
     }
   };
 
+  const handleVoiceOrbClick = () => {
+    if (!selectedLanguage) {
+      setLanguageError(true);
+      toast({
+        title: "Language Required",
+        description: "Please select a language before using the microphone.",
+        variant: "destructive"
+      });
+      // Clear error after 3 seconds
+      setTimeout(() => setLanguageError(false), 3000);
+      return;
+    }
+    setLanguageError(false);
+    console.log('Voice orb clicked with language:', selectedLanguage);
+  };
+
+  const handleLanguageChange = (languageCode: string) => {
+    setSelectedLanguage(languageCode);
+    setLanguageError(false);
+  };
+
   const handleAudioRecorded = (audioBlob: Blob) => {
+    if (!selectedLanguage) {
+      setLanguageError(true);
+      toast({
+        title: "Language Required",
+        description: "Please select a language before recording audio.",
+        variant: "destructive"
+      });
+      return;
+    }
     setRecordedAudio(audioBlob);
     console.log('Audio recorded:', audioBlob);
     toast({
@@ -181,7 +212,11 @@ const Index = () => {
             
             {/* Language selector only */}
             <div className="flex items-center">
-              <LanguageSelector selectedLanguage={selectedLanguage} onLanguageChange={setSelectedLanguage} />
+              <LanguageSelector 
+                selectedLanguage={selectedLanguage} 
+                onLanguageChange={handleLanguageChange}
+                hasError={languageError}
+              />
             </div>
           </div>
         </div>
@@ -191,7 +226,13 @@ const Index = () => {
       <div className="max-w-7xl mx-auto px-4 pb-8">
         {/* Voice Orb in its own centered row */}
         <div className="flex flex-col items-center mb-8 py-[34px]">
-          <VoiceOrb isListening={false} isProcessing={false} onStartListening={() => console.log('Start listening')} onStopListening={() => console.log('Stop listening')} onAudioRecorded={handleAudioRecorded} />
+          <VoiceOrb 
+            isListening={false} 
+            isProcessing={false} 
+            onStartListening={handleVoiceOrbClick} 
+            onStopListening={() => console.log('Stop listening')} 
+            onAudioRecorded={handleAudioRecorded} 
+          />
           <AudioPlayer audioBlob={recordedAudio} onAudioProcessed={handleAudioProcessed} selectedLanguage={selectedLanguage} />
         </div>
         

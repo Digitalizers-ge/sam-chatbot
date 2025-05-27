@@ -108,6 +108,9 @@ export const VoiceOrb = ({
   };
 
   const handleClick = () => {
+    // Call the validation callback first
+    onStartListening();
+    
     if (isRecording) {
       stopRecording();
     } else {
