@@ -111,7 +111,7 @@ const Index = () => {
     try {
       console.log('Sending text to Amazon Polly:', text);
       
-      const response = await fetch('https://z1eznxs6nb.execute-api.eu-north-1.amazonaws.com/audio', {
+      const response = await fetch('https://z1eznxs6nb.execute-api.eu-north-1.amazonaws.com/prod/audio', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -121,6 +121,7 @@ const Index = () => {
           lang: 'en'
         })
       });
+
 
       if (!response.ok) {
         throw new Error(`Polly API request failed: ${response.status}`);
