@@ -44,15 +44,23 @@ const Index = () => {
   const getLanguageCode = (langCode: string): string => {
     const langMap: Record<string, string> = {
       'en': 'en-US',
+      'fr': 'fr-FR',
+      'es': 'es-ES',
+      'de': 'de-DE',
+      'it': 'it-IT',
+      'pt': 'pt-PT',
+      'hi': 'hi-IN',
       'ar': 'ar-SA',
       'fa': 'fa-IR',
-      'fr': 'fr-FR',
-      'de': 'de-DE',
-      'tr': 'tr-TR',
-      'so': 'so-SO',
-      'uk': 'uk-UA',
+      'sw': 'sw-KE',
+      'nl': 'nl-NL',
+      'ja': 'ja-JP',
+      'ko': 'ko-KR',
+      'zh': 'zh-CN',
       'ru': 'ru-RU',
-      'es': 'es-ES'
+      'tr': 'tr-TR',
+      'th': 'th-TH',
+      'id': 'id-ID'
     };
     return langMap[langCode] || 'en-US';
   };
