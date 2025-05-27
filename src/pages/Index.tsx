@@ -25,110 +25,83 @@ const Index = () => {
   // Mock conversation data
   const getLanguageCode = (langCode: string): string => {
     const langMap: Record<string, string> = {
-      'ab-GE': 'ab',
-      'af-ZA': 'af',
-      'ar-AE': 'ar-ae',
-      'ar-SA': 'ar',
-      'hy-AM': 'hy',
-      'ast-ES': 'ast',
-      'az-AZ': 'az',
-      'ba-RU': 'ba',
-      'eu-ES': 'eu',
-      'be-BY': 'be',
-      'bn-IN': 'bn',
-      'bs-BA': 'bs',
-      'bg-BG': 'bg',
-      'ca-ES': 'ca',
-      'ckb-IR': 'ckb',
-      'ckb-IQ': 'ckb',
-      'yue-HK': 'yue',
-      'zh-CN': 'zh',
-      'zh-TW': 'zh-tw',
-      'hr-HR': 'hr',
-      'cs-CZ': 'cs',
-      'da-DK': 'da',
-      'nl-NL': 'nl',
-      'en-AU': 'en-au',
-      'en-GB': 'en-gb',
-      'en-IN': 'en-in',
-      'en-IE': 'en-ie',
-      'en-NZ': 'en-nz',
-      'en-AB': 'en-ab',
-      'en-ZA': 'en-za',
-      'en-US': 'en',
-      'en-WL': 'en-wl',
-      'et-ET': 'et',
-      'fa-IR': 'fa',
-      'fi-FI': 'fi',
-      'fr-FR': 'fr',
-      'fr-CA': 'fr-ca',
-      'gl-ES': 'gl',
-      'ka-GE': 'ka',
-      'de-DE': 'de',
-      'de-CH': 'de-ch',
-      'el-GR': 'el',
-      'gu-IN': 'gu',
-      'ha-NG': 'ha',
-      'he-IL': 'he',
-      'hi-IN': 'hi',
-      'hu-HU': 'hu',
-      'is-IS': 'is',
-      'id-ID': 'id',
-      'it-IT': 'it',
-      'ja-JP': 'ja',
-      'kab-DZ': 'kab',
-      'kn-IN': 'kn',
-      'kk-KZ': 'kk',
-      'rw-RW': 'rw',
-      'ko-KR': 'ko',
-      'ky-KG': 'ky',
-      'lv-LV': 'lv',
-      'lt-LT': 'lt',
-      'lg-IN': 'lg',
-      'mk-MK': 'mk',
-      'ms-MY': 'ms',
-      'ml-IN': 'ml',
-      'mt-MT': 'mt',
-      'mr-IN': 'mr',
-      'mhr-RU': 'mhr',
-      'mn-MN': 'mn',
-      'no-NO': 'nb',
-      'or-IN': 'or',
-      'ps-AF': 'ps',
-      'pl-PL': 'pl',
-      'pt-PT': 'pt',
-      'pt-BR': 'pt-br',
-      'pa-IN': 'pa',
-      'ro-RO': 'ro',
-      'ru-RU': 'ru',
-      'sr-RS': 'sr',
-      'si-LK': 'si',
-      'sk-SK': 'sk',
-      'sl-SI': 'sl',
-      'so-SO': 'so',
-      'es-ES': 'es',
-      'es-US': 'es-us',
-      'su-ID': 'su',
-      'sw-KE': 'sw',
-      'sw-BI': 'sw-bi',
-      'sw-RW': 'sw-rw',
-      'sw-TZ': 'sw-tz',
-      'sw-UG': 'sw-ug',
-      'sv-SE': 'sv',
-      'tl-PH': 'tl',
-      'ta-IN': 'ta',
-      'tt-RU': 'tt',
-      'te-IN': 'te',
-      'th-TH': 'th',
-      'tr-TR': 'tr',
-      'uk-UA': 'uk',
-      'ug-CN': 'ug',
-      'uz-UZ': 'uz',
-      'vi-VN': 'vi',
-      'cy-WL': 'cy',
-      'wo-SN': 'wo',
-      'zu-ZA': 'zu'
-    };
+  'af-ZA': 'af',     // Afrikaans
+  'sq-AL': 'sq',     // Albanian
+  'am-ET': 'am',     // Amharic
+  'ar-SA': 'ar',     // Arabic
+  'hy-AM': 'hy',     // Armenian
+  'az-AZ': 'az',     // Azerbaijani
+  'bn-IN': 'bn',     // Bengali
+  'bs-BA': 'bs',     // Bosnian
+  'bg-BG': 'bg',     // Bulgarian
+  'ca-ES': 'ca',     // Catalan
+  'zh-CN': 'zh',     // Chinese (Simplified)
+  'zh-TW': 'zh-TW',  // Chinese (Traditional)
+  'hr-HR': 'hr',     // Croatian
+  'cs-CZ': 'cs',     // Czech
+  'da-DK': 'da',     // Danish
+  'fa-AF': 'fa-AF',  // Dari
+  'nl-NL': 'nl',     // Dutch
+  'en-US': 'en',     // English
+  'et-EE': 'et',     // Estonian
+  'fa-IR': 'fa',     // Farsi (Persian)
+  'tl-PH': 'tl',     // Filipino, Tagalog
+  'fi-FI': 'fi',     // Finnish
+  'fr-FR': 'fr',     // French
+  'fr-CA': 'fr-CA',  // French (Canada)
+  'ka-GE': 'ka',     // Georgian
+  'de-DE': 'de',     // German
+  'el-GR': 'el',     // Greek
+  'gu-IN': 'gu',     // Gujarati
+  'ht-HT': 'ht',     // Haitian Creole
+  'ha-NG': 'ha',     // Hausa
+  'he-IL': 'he',     // Hebrew
+  'hi-IN': 'hi',     // Hindi
+  'hu-HU': 'hu',     // Hungarian
+  'is-IS': 'is',     // Icelandic
+  'id-ID': 'id',     // Indonesian
+  'ga-IE': 'ga',     // Irish
+  'it-IT': 'it',     // Italian
+  'ja-JP': 'ja',     // Japanese
+  'kn-IN': 'kn',     // Kannada
+  'kk-KZ': 'kk',     // Kazakh
+  'ko-KR': 'ko',     // Korean
+  'lv-LV': 'lv',     // Latvian
+  'lt-LT': 'lt',     // Lithuanian
+  'mk-MK': 'mk',     // Macedonian
+  'ms-MY': 'ms',     // Malay
+  'ml-IN': 'ml',     // Malayalam
+  'mt-MT': 'mt',     // Maltese
+  'mr-IN': 'mr',     // Marathi
+  'mn-MN': 'mn',     // Mongolian
+  'no-NO': 'no',     // Norwegian (Bokmål)
+  'ps-AF': 'ps',     // Pashto
+  'pl-PL': 'pl',     // Polish
+  'pt-BR': 'pt',     // Portuguese (Brazil)
+  'pt-PT': 'pt-PT',  // Portuguese (Portugal)
+  'pa-IN': 'pa',     // Punjabi
+  'ro-RO': 'ro',     // Romanian
+  'ru-RU': 'ru',     // Russian
+  'sr-RS': 'sr',     // Serbian
+  'si-LK': 'si',     // Sinhala
+  'sk-SK': 'sk',     // Slovak
+  'sl-SI': 'sl',     // Slovenian
+  'so-SO': 'so',     // Somali
+  'es-ES': 'es',     // Spanish
+  'es-MX': 'es-MX',  // Spanish (Mexico)
+  'sw-KE': 'sw',     // Swahili
+  'sv-SE': 'sv',     // Swedish
+  'ta-IN': 'ta',     // Tamil
+  'te-IN': 'te',     // Telugu
+  'th-TH': 'th',     // Thai
+  'tr-TR': 'tr',     // Turkish
+  'uk-UA': 'uk',     // Ukrainian
+  'ur-PK': 'ur',     // Urdu
+  'uz-UZ': 'uz',     // Uzbek
+  'vi-VN': 'vi',     // Vietnamese
+  'cy-GB': 'cy'      // Welsh
+};
+
     
     return langMap[langCode] || 'en';
   };
