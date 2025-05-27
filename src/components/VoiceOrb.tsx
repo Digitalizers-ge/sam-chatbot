@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { Mic, MicOff, Square } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -8,6 +9,7 @@ interface VoiceOrbProps {
   onStartListening: () => void;
   onStopListening: () => void;
   onAudioRecorded?: (audioBlob: Blob) => void;
+  selectedLanguage?: string;
 }
 
 export const VoiceOrb = ({ 
@@ -15,7 +17,8 @@ export const VoiceOrb = ({
   isProcessing, 
   onStartListening, 
   onStopListening,
-  onAudioRecorded 
+  onAudioRecorded,
+  selectedLanguage 
 }: VoiceOrbProps) => {
   const [isSupported, setIsSupported] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
@@ -29,6 +32,11 @@ export const VoiceOrb = ({
   }, []);
 
   const startRecording = async () => {
+    if (!selectedLanguage) {
+      console.log('No language selected, cannot start recording');
+      return;
+    }
+
     try {
       console.log('Starting recording...');
       const stream = await navigator.mediaDevices.getUserMedia({ 
@@ -110,6 +118,12 @@ export const VoiceOrb = ({
   const handleClick = () => {
     // Call the validation callback first
     onStartListening();
+    
+    // Only proceed with recording if language is selected
+    if (!selectedLanguage) {
+      console.log('Language not selected, not starting recording');
+      return;
+    }
     
     if (isRecording) {
       stopRecording();

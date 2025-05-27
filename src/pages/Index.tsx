@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { VoiceOrb } from '@/components/VoiceOrb';
@@ -231,7 +232,8 @@ const Index = () => {
             isProcessing={false} 
             onStartListening={handleVoiceOrbClick} 
             onStopListening={() => console.log('Stop listening')} 
-            onAudioRecorded={handleAudioRecorded} 
+            onAudioRecorded={handleAudioRecorded}
+            selectedLanguage={selectedLanguage}
           />
           <AudioPlayer audioBlob={recordedAudio} onAudioProcessed={handleAudioProcessed} selectedLanguage={selectedLanguage} />
         </div>
