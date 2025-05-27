@@ -14,10 +14,10 @@ export const ConversationBox = ({ messages, onSpeak }: ConversationBoxProps) => 
   };
 
   return (
-    <div className="sam-glass rounded-2xl p-6 max-h-96 overflow-y-auto">
+    <div className="sam-glass rounded-2xl p-6 h-full flex flex-col">
       <h2 className="text-xl font-semibold text-gray-800 mb-4">Conversation</h2>
       
-      <div className="space-y-4">
+      <div className="flex-1 space-y-4 overflow-y-auto">
         {messages.map((message) => (
           <div
             key={message.id}

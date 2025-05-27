@@ -111,7 +111,10 @@
   }
   
   .orb-glow {
-    box-shadow: 0 0 40px hsl(var(--sam-sky) / 0.4);
+    box-shadow: 
+      0 0 40px rgba(168, 85, 247, 0.4),
+      0 0 60px rgba(251, 146, 60, 0.3),
+      0 0 80px rgba(250, 204, 21, 0.2);
   }
   
   .orb-pulse {
@@ -125,22 +128,34 @@
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 40px hsl(var(--sam-sky) / 0.4);
+    box-shadow: 
+      0 0 40px rgba(168, 85, 247, 0.4),
+      0 0 60px rgba(251, 146, 60, 0.3),
+      0 0 80px rgba(250, 204, 21, 0.2);
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 60px hsl(var(--sam-sky) / 0.6);
+    box-shadow: 
+      0 0 60px rgba(168, 85, 247, 0.6),
+      0 0 80px rgba(251, 146, 60, 0.4),
+      0 0 100px rgba(250, 204, 21, 0.3);
     transform: scale(1.02);
   }
 }
 
 @keyframes listening-pulse {
   0%, 100% {
-    box-shadow: 0 0 60px hsl(var(--sam-sky) / 0.8);
+    box-shadow: 
+      0 0 60px rgba(59, 130, 246, 0.8),
+      0 0 80px rgba(168, 85, 247, 0.6),
+      0 0 100px rgba(251, 146, 60, 0.4);
     transform: scale(1.05);
   }
   50% {
-    box-shadow: 0 0 80px hsl(var(--sam-sky) / 1);
+    box-shadow: 
+      0 0 80px rgba(59, 130, 246, 1),
+      0 0 100px rgba(168, 85, 247, 0.8),
+      0 0 120px rgba(251, 146, 60, 0.6);
     transform: scale(1.1);
   }
 }

@@ -102,16 +102,16 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen sam-gradient-bg">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Header with SAM title and controls */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex flex-col items-center">
+    <div className="min-h-screen sam-gradient-bg flex">
+      <div className="max-w-7xl mx-auto px-4 py-8 w-full flex">
+        {/* Vertical Header */}
+        <div className="flex flex-col items-center justify-center mr-8 min-w-[200px]">
+          <div className="flex flex-col items-center mb-8">
             <h1 className="text-4xl font-bold text-gray-800 mb-2">SAM</h1>
-            <p className="text-lg text-gray-600">Ask. Listen. Understand.</p>
+            <p className="text-lg text-gray-600 text-center">Ask. Listen. Understand.</p>
           </div>
           
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-col items-center space-y-4">
             <LanguageSelector
               selectedLanguage={selectedLanguage}
               onLanguageChange={setSelectedLanguage}
@@ -128,9 +128,9 @@ const Index = () => {
         </div>
 
         {/* Main content area */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 flex-1">
           {/* Voice Orb and Conversation */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 flex flex-col space-y-6 h-full">
             <div className="flex justify-center">
               <VoiceOrb
                 isListening={false}
@@ -140,10 +140,12 @@ const Index = () => {
               />
             </div>
             
-            <ConversationBox 
-              messages={messages} 
-              onSpeak={speakText}
-            />
+            <div className="flex-1">
+              <ConversationBox 
+                messages={messages} 
+                onSpeak={speakText}
+              />
+            </div>
           </div>
 
           {/* Sources and Resources */}
