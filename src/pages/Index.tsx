@@ -3,21 +3,19 @@ import { LanguageSelector } from '@/components/LanguageSelector';
 import { VoiceOrb } from '@/components/VoiceOrb';
 import { ConversationBox } from '@/components/ConversationBox';
 import { SourcesBox } from '@/components/SourcesBox';
-import { Button } from '@/components/ui/button';
-import { Volume2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+
 export interface Message {
   id: string;
   text: string;
   isUser: boolean;
   timestamp: Date;
 }
+
 const Index = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [voiceMode, setVoiceMode] = useState(true);
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
 
   // Mock conversation data
   const [messages] = useState<Message[]>([{
@@ -87,7 +85,8 @@ const Index = () => {
       });
     }
   };
-  return <div className="min-h-screen sam-gradient-bg">
+  return (
+    <div className="min-h-screen sam-gradient-bg">
       {/* Header at the top */}
       <div className="w-full px-4 py-6">
         <div className="max-w-7xl mx-auto">
@@ -98,12 +97,9 @@ const Index = () => {
               <p className="text-lg text-gray-600 text-center">Ask. Listen. Understand.</p>
             </div>
             
-            {/* Language selector and sound button in a row */}
-            <div className="flex items-center space-x-4">
+            {/* Language selector only */}
+            <div className="flex items-center">
               <LanguageSelector selectedLanguage={selectedLanguage} onLanguageChange={setSelectedLanguage} />
-              <Button variant="outline" size="icon" onClick={() => setVoiceMode(!voiceMode)} className={`rounded-full w-12 h-12 ${voiceMode ? 'bg-blue-100' : 'bg-gray-100'}`}>
-                <Volume2 className="w-5 h-5" />
-              </Button>
             </div>
           </div>
         </div>
@@ -129,6 +125,8 @@ const Index = () => {
           </div>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
