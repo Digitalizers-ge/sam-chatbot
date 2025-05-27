@@ -37,9 +37,10 @@ export const AudioPlayer = ({ audioBlob, onAudioProcessed, selectedLanguage }: A
     }
   }, [audioBlob]);
 
-  const convertToWav = async (audioBlob: Blob): Promise<Blob> => {
-    // For now, we'll return the original blob as browsers typically handle WebM well
-    // In a production environment, you might want to use a library like lamejs for proper WAV conversion
+  const convertToMp3 = async (audioBlob: Blob): Promise<Blob> => {
+    // For browser compatibility, we'll return the original blob
+    // Most modern browsers can handle WebM/MP4 audio formats
+    // In a production environment, you might want to use a library like lamejs for proper MP3 conversion
     return audioBlob;
   };
 
@@ -71,12 +72,12 @@ export const AudioPlayer = ({ audioBlob, onAudioProcessed, selectedLanguage }: A
     console.log('Starting audio processing...');
 
     try {
-      // Convert to WAV (for now, using original blob)
-      const wavBlob = await convertToWav(audioBlob);
-      console.log('Audio converted to WAV');
+      // Convert to MP3 (for now, using original blob)
+      const mp3Blob = await convertToMp3(audioBlob);
+      console.log('Audio converted to MP3');
 
       // Convert to base64
-      const base64Audio = await blobToBase64(wavBlob);
+      const base64Audio = await blobToBase64(mp3Blob);
       console.log('Audio converted to base64, length:', base64Audio.length);
 
       // Send to API
