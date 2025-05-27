@@ -113,20 +113,20 @@ const Index = () => {
 
       {/* Main content area */}
       <div className="max-w-7xl mx-auto px-4 pb-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 min-h-[calc(100vh-280px)]">
-          {/* Voice Orb and Conversation */}
-          <div className="lg:col-span-2 flex flex-col space-y-6 h-full">
-            <div className="flex justify-center">
-              <VoiceOrb isListening={false} isProcessing={false} onStartListening={() => console.log('Start listening')} onStopListening={() => console.log('Stop listening')} />
-            </div>
-            
-            <div className="flex-1">
-              <ConversationBox messages={messages} onSpeak={speakText} />
-            </div>
+        {/* Voice Orb in its own centered row */}
+        <div className="flex justify-center mb-8">
+          <VoiceOrb isListening={false} isProcessing={false} onStartListening={() => console.log('Start listening')} onStopListening={() => console.log('Stop listening')} />
+        </div>
+        
+        {/* Conversation and Sources in equal height row */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 min-h-[calc(100vh-400px)]">
+          {/* Conversation Box */}
+          <div className="lg:col-span-2 h-full">
+            <ConversationBox messages={messages} onSpeak={speakText} />
           </div>
 
-          {/* Sources and Resources */}
-          <div className="lg:col-span-1">
+          {/* Sources Box */}
+          <div className="lg:col-span-1 h-full">
             <SourcesBox />
           </div>
         </div>
