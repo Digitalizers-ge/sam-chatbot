@@ -129,6 +129,8 @@ const Index = () => {
       'wo-SN': 'wo',
       'zu-ZA': 'zu'
     };
+    
+    return langMap[langCode] || 'en';
   };
 
   const speakText = (text: string) => {
