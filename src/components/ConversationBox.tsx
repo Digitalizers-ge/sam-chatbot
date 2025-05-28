@@ -56,52 +56,54 @@ export const ConversationBox = ({ messages, onSpeak, onAddMessage }: Conversatio
         )}
       </div>
 
-      {/* Text Input Section */}
-      <div className="border-t pt-4">
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <div className="flex gap-2 mb-2">
-            <Button
-              type="button"
-              size="sm"
-              variant={selectedSpeaker === 'user1' ? 'default' : 'outline'}
-              onClick={() => setSelectedSpeaker('user1')}
-              className="text-xs"
-            >
-              User 1
-            </Button>
-            <Button
-              type="button"
-              size="sm"
-              variant={selectedSpeaker === 'user2' ? 'default' : 'outline'}
-              onClick={() => setSelectedSpeaker('user2')}
-              className="text-xs"
-            >
-              User 2
-            </Button>
-          </div>
-          <div className="flex gap-2">
-            <Textarea
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Type a message..."
-              className="flex-1 min-h-[80px] resize-none"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSubmit(e);
-                }
-              }}
-            />
-            <Button 
-              type="submit" 
-              disabled={!newMessage.trim()}
-              className="self-end"
-            >
-              <Send className="w-4 h-4" />
-            </Button>
-          </div>
-        </form>
-      </div>
+      {/* Text Input Section - Only show on meeting page */}
+      {onAddMessage && (
+        <div className="border-t pt-4">
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div className="flex gap-2 mb-2">
+              <Button
+                type="button"
+                size="sm"
+                variant={selectedSpeaker === 'user1' ? 'default' : 'outline'}
+                onClick={() => setSelectedSpeaker('user1')}
+                className="text-xs"
+              >
+                User 1
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant={selectedSpeaker === 'user2' ? 'default' : 'outline'}
+                onClick={() => setSelectedSpeaker('user2')}
+                className="text-xs"
+              >
+                User 2
+              </Button>
+            </div>
+            <div className="flex gap-2">
+              <Textarea
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                placeholder="Type a message..."
+                className="flex-1 min-h-[80px] resize-none"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSubmit(e);
+                  }
+                }}
+              />
+              <Button 
+                type="submit" 
+                disabled={!newMessage.trim()}
+                className="self-end"
+              >
+                <Send className="w-4 h-4" />
+              </Button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
