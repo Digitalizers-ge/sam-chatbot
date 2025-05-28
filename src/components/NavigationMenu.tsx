@@ -11,7 +11,8 @@ export const NavigationMenu = () => {
   const menuItems = [
     { label: 'Project', href: '/project' },
     { label: 'Dashboard', href: '/admin' },
-    { label: 'Meeting', href: '/meeting' }
+    { label: 'Meeting', href: '/meeting' },
+    { label: 'Docs', href: '/docs' }
   ];
 
   return (
