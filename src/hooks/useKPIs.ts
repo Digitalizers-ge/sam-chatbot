@@ -40,7 +40,14 @@ export const useKPIs = () => {
         return;
       }
 
-      setKpis(data);
+      if (data) {
+        // Transform the data to match our KPIData interface
+        const transformedData: KPIData = {
+          ...data,
+          users_by_country: data.users_by_country as Record<string, number>
+        };
+        setKpis(transformedData);
+      }
     } catch (error) {
       console.error('Error fetching KPIs:', error);
       toast({
