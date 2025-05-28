@@ -5,6 +5,9 @@ import { ConversationBox } from '@/components/ConversationBox';
 import { MeetingMinutes } from '@/components/MeetingMinutes';
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { useToast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export interface Message {
   id: string;
@@ -25,6 +28,7 @@ const Meeting = () => {
   const [recordedAudio2, setRecordedAudio2] = useState<Blob | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const speakText = async (text: string, language: string = 'en') => {
     try {
@@ -184,6 +188,16 @@ const Meeting = () => {
       {/* Header */}
       <div className="w-full px-4 py-6">
         <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between mb-6">
+            <Button
+              onClick={() => navigate(-1)}
+              variant="ghost"
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </Button>
+          </div>
           <div className="flex flex-col items-center py-[46px]">
             <div className="flex flex-col items-center mb-6">
               <img src="/lovable-uploads/22846939-a307-4be2-b1d0-39a60a6cf0de.png" alt="SAM Logo" className="h-36 w-auto mb-2" />
