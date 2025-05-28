@@ -18,82 +18,101 @@ const keyMetrics = {
   averageQuestionsPerSession: 1.46,
   activeUsers: 342
 };
-
-const languageData = [
-  { language: 'English', count: 456, percentage: 36.5 },
-  { language: 'Arabic', count: 298, percentage: 23.9 },
-  { language: 'French', count: 186, percentage: 14.9 },
-  { language: 'German', count: 142, percentage: 11.4 },
-  { language: 'Spanish', count: 98, percentage: 7.9 },
-  { language: 'Other', count: 68, percentage: 5.4 }
-];
-
-const countryData = [
-  { country: 'Germany', users: 145, color: '#8884d8' },
-  { country: 'France', users: 98, color: '#82ca9d' },
-  { country: 'Italy', users: 76, color: '#ffc658' },
-  { country: 'Spain', users: 54, color: '#ff7300' },
-  { country: 'Netherlands', users: 32, color: '#00ff00' },
-  { country: 'Other', users: 67, color: '#0088fe' }
-];
-
-const mockMessages = [
-  {
-    id: '1',
-    timestamp: new Date('2024-01-15T10:30:00'),
-    userCountry: 'Germany',
-    language: 'English',
-    userMessage: 'What are the requirements for asylum in Germany?',
-    assistantMessage: 'To apply for asylum in Germany, you need to...',
-    sessionId: 'session_001',
-    flagged: false
-  },
-  {
-    id: '2',
-    timestamp: new Date('2024-01-15T11:15:00'),
-    userCountry: 'France',
-    language: 'French',
-    userMessage: 'Comment puis-je faire une demande d\'asile?',
-    assistantMessage: 'Pour faire une demande d\'asile en France...',
-    sessionId: 'session_002',
-    flagged: true
-  },
-  {
-    id: '3',
-    timestamp: new Date('2024-01-15T12:00:00'),
-    userCountry: 'Italy',
-    language: 'Arabic',
-    userMessage: 'ما هي الوثائق المطلوبة؟',
-    assistantMessage: 'الوثائق المطلوبة للجوء في إيطاليا...',
-    sessionId: 'session_003',
-    flagged: false
-  }
-];
-
+const languageData = [{
+  language: 'English',
+  count: 456,
+  percentage: 36.5
+}, {
+  language: 'Arabic',
+  count: 298,
+  percentage: 23.9
+}, {
+  language: 'French',
+  count: 186,
+  percentage: 14.9
+}, {
+  language: 'German',
+  count: 142,
+  percentage: 11.4
+}, {
+  language: 'Spanish',
+  count: 98,
+  percentage: 7.9
+}, {
+  language: 'Other',
+  count: 68,
+  percentage: 5.4
+}];
+const countryData = [{
+  country: 'Germany',
+  users: 145,
+  color: '#8884d8'
+}, {
+  country: 'France',
+  users: 98,
+  color: '#82ca9d'
+}, {
+  country: 'Italy',
+  users: 76,
+  color: '#ffc658'
+}, {
+  country: 'Spain',
+  users: 54,
+  color: '#ff7300'
+}, {
+  country: 'Netherlands',
+  users: 32,
+  color: '#00ff00'
+}, {
+  country: 'Other',
+  users: 67,
+  color: '#0088fe'
+}];
+const mockMessages = [{
+  id: '1',
+  timestamp: new Date('2024-01-15T10:30:00'),
+  userCountry: 'Germany',
+  language: 'English',
+  userMessage: 'What are the requirements for asylum in Germany?',
+  assistantMessage: 'To apply for asylum in Germany, you need to...',
+  sessionId: 'session_001',
+  flagged: false
+}, {
+  id: '2',
+  timestamp: new Date('2024-01-15T11:15:00'),
+  userCountry: 'France',
+  language: 'French',
+  userMessage: 'Comment puis-je faire une demande d\'asile?',
+  assistantMessage: 'Pour faire une demande d\'asile en France...',
+  sessionId: 'session_002',
+  flagged: true
+}, {
+  id: '3',
+  timestamp: new Date('2024-01-15T12:00:00'),
+  userCountry: 'Italy',
+  language: 'Arabic',
+  userMessage: 'ما هي الوثائق المطلوبة؟',
+  assistantMessage: 'الوثائق المطلوبة للجوء في إيطاليا...',
+  sessionId: 'session_003',
+  flagged: false
+}];
 const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterLanguage, setFilterLanguage] = useState('all');
   const [filterFlagged, setFilterFlagged] = useState('all');
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-
   const chartConfig = {
     count: {
       label: "Usage Count",
-      color: "#8884d8",
-    },
+      color: "#8884d8"
+    }
   };
-
   const filteredMessages = mockMessages.filter(message => {
-    const matchesSearch = message.userMessage.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         message.assistantMessage.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = message.userMessage.toLowerCase().includes(searchTerm.toLowerCase()) || message.assistantMessage.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesLanguage = filterLanguage === 'all' || message.language === filterLanguage;
-    const matchesFlagged = filterFlagged === 'all' || 
-                          (filterFlagged === 'flagged' && message.flagged) ||
-                          (filterFlagged === 'not-flagged' && !message.flagged);
-    
+    const matchesFlagged = filterFlagged === 'all' || filterFlagged === 'flagged' && message.flagged || filterFlagged === 'not-flagged' && !message.flagged;
     return matchesSearch && matchesLanguage && matchesFlagged;
   });
-
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && file.type === 'application/pdf') {
@@ -102,7 +121,6 @@ const AdminDashboard = () => {
       alert('Please select a PDF file');
     }
   };
-
   const handleUploadSubmit = () => {
     if (uploadedFile) {
       // Here you would implement the actual upload logic
@@ -111,17 +129,11 @@ const AdminDashboard = () => {
       setUploadedFile(null);
     }
   };
-
-  return (
-    <div className="min-h-screen sam-gradient-bg">
+  return <div className="min-h-screen sam-gradient-bg">
       <div className="min-h-screen bg-white/10 backdrop-blur-sm p-6">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8 flex items-center gap-4">
-            <img 
-              src="/lovable-uploads/22846939-a307-4be2-b1d0-39a60a6cf0de.png" 
-              alt="SAM Logo" 
-              className="h-12 w-auto"
-            />
+            <img src="/lovable-uploads/22846939-a307-4be2-b1d0-39a60a6cf0de.png" alt="SAM Logo" className="h-24 w-auto" />
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
               <p className="text-gray-600">Monitor platform usage and moderate conversations</p>
@@ -206,18 +218,11 @@ const AdminDashboard = () => {
                 <div className="h-[300px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie
-                        data={countryData}
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={80}
-                        fill="#8884d8"
-                        dataKey="users"
-                        label={({ country, users }) => `${country}: ${users}`}
-                      >
-                        {countryData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
+                      <Pie data={countryData} cx="50%" cy="50%" outerRadius={80} fill="#8884d8" dataKey="users" label={({
+                      country,
+                      users
+                    }) => `${country}: ${users}`}>
+                        {countryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
                       </Pie>
                       <Tooltip />
                     </PieChart>
@@ -239,12 +244,7 @@ const AdminDashboard = () => {
                 <div className="flex-1">
                   <div className="relative">
                     <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input
-                      placeholder="Search messages..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10"
-                    />
+                    <Input placeholder="Search messages..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10" />
                   </div>
                 </div>
                 <Select value={filterLanguage} onValueChange={setFilterLanguage}>
@@ -287,8 +287,7 @@ const AdminDashboard = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredMessages.map((message) => (
-                      <TableRow key={message.id}>
+                    {filteredMessages.map(message => <TableRow key={message.id}>
                         <TableCell className="text-sm">
                           {message.timestamp.toLocaleString()}
                         </TableCell>
@@ -310,16 +309,12 @@ const AdminDashboard = () => {
                             <Button variant="outline" size="sm">
                               View
                             </Button>
-                            <Button 
-                              variant={message.flagged ? "secondary" : "destructive"} 
-                              size="sm"
-                            >
+                            <Button variant={message.flagged ? "secondary" : "destructive"} size="sm">
                               {message.flagged ? "Unflag" : "Flag"}
                             </Button>
                           </div>
                         </TableCell>
-                      </TableRow>
-                    ))}
+                      </TableRow>)}
                   </TableBody>
                 </Table>
               </div>
@@ -341,42 +336,24 @@ const AdminDashboard = () => {
               <div className="space-y-2">
                 <Label htmlFor="pdf-upload">Upload PDF Document</Label>
                 <div className="flex items-center gap-4">
-                  <Input
-                    id="pdf-upload"
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleFileUpload}
-                    className="flex-1"
-                  />
-                  <Button 
-                    onClick={handleUploadSubmit} 
-                    disabled={!uploadedFile}
-                    className="flex items-center gap-2"
-                  >
+                  <Input id="pdf-upload" type="file" accept=".pdf" onChange={handleFileUpload} className="flex-1" />
+                  <Button onClick={handleUploadSubmit} disabled={!uploadedFile} className="flex items-center gap-2">
                     <Upload className="h-4 w-4" />
                     Upload
                   </Button>
                 </div>
-                {uploadedFile && (
-                  <p className="text-sm text-green-600">
+                {uploadedFile && <p className="text-sm text-green-600">
                     Selected: {uploadedFile.name} ({(uploadedFile.size / 1024 / 1024).toFixed(2)} MB)
-                  </p>
-                )}
+                  </p>}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="context-description">Context Description (Optional)</Label>
-                <Textarea
-                  id="context-description"
-                  placeholder="Describe what this document contains and how it should be used by the model..."
-                  className="min-h-[80px]"
-                />
+                <Textarea id="context-description" placeholder="Describe what this document contains and how it should be used by the model..." className="min-h-[80px]" />
               </div>
             </CardContent>
           </Card>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default AdminDashboard;
