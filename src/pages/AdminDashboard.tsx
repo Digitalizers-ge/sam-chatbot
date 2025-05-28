@@ -10,8 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Users, MessageSquare, Globe, BarChart3, Search, Filter, Upload, FileText, Plus } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 // Mock data for demonstration
 const keyMetrics = {
@@ -137,7 +136,9 @@ const AdminDashboard = () => {
         <div className="max-w-7xl mx-auto">
           <div className="mb-8 flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img src="/lovable-uploads/22846939-a307-4be2-b1d0-39a60a6cf0de.png" alt="SAM Logo" className="h-24 w-auto" />
+              <Link to="/" className="hover:opacity-80 transition-opacity">
+                <img src="/lovable-uploads/22846939-a307-4be2-b1d0-39a60a6cf0de.png" alt="SAM Logo" className="h-24 w-auto" />
+              </Link>
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
                 <p className="text-gray-600">Monitor platform usage and moderate conversations</p>
