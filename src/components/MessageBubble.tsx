@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Play } from 'lucide-react';
@@ -7,6 +6,7 @@ interface MessageBubbleProps {
   message: string;
   isUser: boolean;
   timestamp: Date;
+  speaker?: 'user1' | 'user2';
   audioUrl?: string;
   onReplay?: () => void;
   onRephrase?: () => void;
@@ -18,6 +18,7 @@ export const MessageBubble = ({
   message,
   isUser,
   timestamp,
+  speaker,
   audioUrl,
   onReplay,
   onRephrase,

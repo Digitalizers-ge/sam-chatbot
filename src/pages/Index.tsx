@@ -4,6 +4,7 @@ import { VoiceOrb } from '@/components/VoiceOrb';
 import { ConversationBox } from '@/components/ConversationBox';
 import { SourcesBox } from '@/components/SourcesBox';
 import { AudioPlayer } from '@/components/AudioPlayer';
+import { NavigationMenu } from '@/components/NavigationMenu';
 import { useToast } from '@/hooks/use-toast';
 
 export interface Message {
@@ -219,6 +220,14 @@ const Index = () => {
       {/* Header at the top */}
       <div className="w-full px-4 py-6">
         <div className="max-w-7xl mx-auto">
+          {/* Navigation Bar */}
+          <div className="flex justify-between items-center mb-8">
+            <div className="flex items-center gap-4">
+              <img src="/lovable-uploads/22846939-a307-4be2-b1d0-39a60a6cf0de.png" alt="SAM Logo" className="h-16 w-auto" />
+            </div>
+            <NavigationMenu />
+          </div>
+
           <div className="flex flex-col items-center py-[46px]">
             {/* Logo and subtitle vertically stacked */}
             <div className="flex flex-col items-center mb-6">

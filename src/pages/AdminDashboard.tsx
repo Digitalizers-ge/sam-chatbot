@@ -9,7 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { Users, MessageSquare, Globe, BarChart3, Search, Filter, Upload, FileText } from 'lucide-react';
+import { Users, MessageSquare, Globe, BarChart3, Search, Filter, Upload, FileText, Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 // Mock data for demonstration
 const keyMetrics = {
@@ -97,6 +98,7 @@ const mockMessages = [{
   flagged: false
 }];
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterLanguage, setFilterLanguage] = useState('all');
   const [filterFlagged, setFilterFlagged] = useState('all');
@@ -132,12 +134,21 @@ const AdminDashboard = () => {
   return <div className="min-h-screen sam-gradient-bg">
       <div className="min-h-screen bg-white/10 backdrop-blur-sm p-6">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-8 flex items-center gap-4">
-            <img src="/lovable-uploads/22846939-a307-4be2-b1d0-39a60a6cf0de.png" alt="SAM Logo" className="h-24 w-auto" />
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
-              <p className="text-gray-600">Monitor platform usage and moderate conversations</p>
+          <div className="mb-8 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <img src="/lovable-uploads/22846939-a307-4be2-b1d0-39a60a6cf0de.png" alt="SAM Logo" className="h-24 w-auto" />
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
+                <p className="text-gray-600">Monitor platform usage and moderate conversations</p>
+              </div>
             </div>
+            <Button 
+              onClick={() => navigate('/meeting')}
+              className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Create a new meeting
+            </Button>
           </div>
 
           {/* Key Metrics */}
