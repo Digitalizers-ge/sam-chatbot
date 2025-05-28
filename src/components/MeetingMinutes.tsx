@@ -2,8 +2,9 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Download, FileText, Users, Clock } from 'lucide-react';
+import { Download, FileText, Users, Clock, Mail, MessageSquare, Copy } from 'lucide-react';
 import { Message } from '@/pages/Meeting';
+import { useToast } from '@/hooks/use-toast';
 
 interface MeetingMinutesProps {
   messages: Message[];
@@ -12,6 +13,7 @@ interface MeetingMinutesProps {
 export const MeetingMinutes = ({ messages }: MeetingMinutesProps) => {
   const [meetingTitle, setMeetingTitle] = useState('');
   const [attendees, setAttendees] = useState('');
+  const { toast } = useToast();
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString([], {
@@ -51,6 +53,37 @@ export const MeetingMinutes = ({ messages }: MeetingMinutesProps) => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  const sendByEmail = () => {
+    const minutes = generateMinutes();
+    const subject = encodeURIComponent(`Meeting Minutes - ${meetingTitle || 'Untitled Meeting'}`);
+    const body = encodeURIComponent(minutes);
+    const mailtoLink = `mailto:?subject=${subject}&body=${body}`;
+    window.open(mailtoLink);
+  };
+
+  const sendBySMS = () => {
+    const minutes = generateMinutes();
+    const truncatedMinutes = minutes.length > 160 ? minutes.substring(0, 157) + '...' : minutes;
+    const smsLink = `sms:?body=${encodeURIComponent(truncatedMinutes)}`;
+    window.open(smsLink);
+  };
+
+  const usefulLinks = [
+    { label: 'SAM Translation Hub', url: 'https://samtranslation.com' },
+    { label: 'Meeting Best Practices', url: 'https://example.com/meeting-practices' },
+    { label: 'Language Support', url: 'https://example.com/language-support' },
+    { label: 'Technical Documentation', url: 'https://docs.samtranslation.com' },
+    { label: 'Contact Support', url: 'https://support.samtranslation.com' }
+  ];
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Copied to clipboard",
+      description: "Link has been copied to your clipboard.",
+    });
   };
 
   const getStats = () => {
@@ -129,41 +162,36 @@ export const MeetingMinutes = ({ messages }: MeetingMinutesProps) => {
           </CardContent>
         </Card>
 
-        {/* Recent Exchanges */}
+        {/* Useful Links */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm">Recent Exchanges</CardTitle>
+            <CardTitle className="text-sm">Useful Links</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3 max-h-48 overflow-y-auto">
-              {messages.length === 0 ? (
-                <p className="text-sm text-gray-500 text-center py-4">
-                  No conversation yet. Start speaking to generate meeting minutes.
-                </p>
-              ) : (
-                messages.slice(-5).map((message) => (
-                  <div key={message.id} className="border-l-2 border-blue-200 pl-3">
-                    <div className="flex justify-between items-start mb-1">
-                      <span className="text-xs font-medium text-blue-600">
-                        {message.speaker === 'user1' ? 'User 1' : 'User 2'}
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        {formatTime(message.timestamp)}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-700 line-clamp-2">
-                      {message.text}
-                    </p>
+              {usefulLinks.map((link, index) => (
+                <div key={index} className="flex items-center justify-between p-2 border rounded-lg">
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-700">{link.label}</p>
+                    <p className="text-xs text-gray-500 truncate">{link.url}</p>
                   </div>
-                ))
-              )}
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => copyToClipboard(link.url)}
+                    className="h-8 w-8 p-0"
+                  >
+                    <Copy className="w-3 h-3" />
+                  </Button>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Download Button */}
-      <div className="mt-4 pt-4 border-t">
+      {/* Action Buttons */}
+      <div className="mt-4 pt-4 border-t space-y-2">
         <Button 
           onClick={downloadMinutes}
           disabled={messages.length === 0}
@@ -172,6 +200,26 @@ export const MeetingMinutes = ({ messages }: MeetingMinutesProps) => {
           <Download className="w-4 h-4 mr-2" />
           Download Minutes
         </Button>
+        <div className="grid grid-cols-2 gap-2">
+          <Button 
+            onClick={sendByEmail}
+            disabled={messages.length === 0}
+            variant="outline"
+            className="text-sm"
+          >
+            <Mail className="w-4 h-4 mr-1" />
+            Send By Email
+          </Button>
+          <Button 
+            onClick={sendBySMS}
+            disabled={messages.length === 0}
+            variant="outline"
+            className="text-sm"
+          >
+            <MessageSquare className="w-4 h-4 mr-1" />
+            Send by SMS
+          </Button>
+        </div>
       </div>
     </div>
   );

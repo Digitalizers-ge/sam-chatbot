@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { VoiceOrb } from '@/components/VoiceOrb';
@@ -167,6 +166,19 @@ const Meeting = () => {
     setMessages(prev => [...prev, message]);
   };
 
+  const handleAddMessage = (text: string, speaker: 'user1' | 'user2') => {
+    const message: Message = {
+      id: Date.now().toString(),
+      text: text,
+      isUser: true,
+      timestamp: new Date(),
+      speaker: speaker,
+      originalLanguage: speaker === 'user1' ? user1Language : user2Language,
+      translatedText: text
+    };
+    setMessages(prev => [...prev, message]);
+  };
+
   return (
     <div className="min-h-screen sam-gradient-bg">
       {/* Header */}
@@ -240,7 +252,11 @@ const Meeting = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 min-h-[calc(100vh-400px)]">
           {/* Conversation Box */}
           <div className="lg:col-span-2 h-full">
-            <ConversationBox messages={messages} onSpeak={speakText} />
+            <ConversationBox 
+              messages={messages} 
+              onSpeak={speakText}
+              onAddMessage={handleAddMessage}
+            />
           </div>
 
           {/* Meeting Minutes */}
