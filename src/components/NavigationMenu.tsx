@@ -10,7 +10,6 @@ export const NavigationMenu = () => {
 
   const menuItems = [
     { label: 'Project', href: '/project' },
-    { label: 'Login', href: '/login' },
     { label: 'Dashboard', href: '/admin' },
     { label: 'Meeting', href: '/meeting' }
   ];
@@ -18,16 +17,23 @@ export const NavigationMenu = () => {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:flex items-center space-x-6">
-        {menuItems.map((item) => (
-          <Link
-            key={item.label}
-            to={item.href}
-            className="text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            {item.label}
-          </Link>
-        ))}
+      <nav className="hidden md:flex items-center justify-between w-full">
+        <div className="flex items-center space-x-6">
+          {menuItems.map((item) => (
+            <Link
+              key={item.label}
+              to={item.href}
+              className="text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+        <Link to="/login">
+          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+            Login
+          </Button>
+        </Link>
       </nav>
 
       {/* Mobile Navigation */}
@@ -49,6 +55,15 @@ export const NavigationMenu = () => {
                 {item.label}
               </Link>
             ))}
+            <Link
+              to="/login"
+              className="mt-4"
+              onClick={() => setIsOpen(false)}
+            >
+              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                Login
+              </Button>
+            </Link>
           </div>
         </SheetContent>
       </Sheet>

@@ -14,6 +14,11 @@ const Project = () => {
           {/* Navigation Bar */}
           <div className="flex justify-between items-center mb-8">
             <div className="flex items-center gap-4">
+              <img 
+                src="/lovable-uploads/22846939-a307-4be2-b1d0-39a60a6cf0de.png" 
+                alt="SAM Logo" 
+                className="h-10 w-auto"
+              />
               <Link to="/" className="text-2xl font-bold text-gray-800">SAM</Link>
             </div>
             <NavigationMenu />
