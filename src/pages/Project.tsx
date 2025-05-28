@@ -190,12 +190,21 @@ const Project = () => {
                 in your preferred language. Help us build a more accessible future for asylum seekers.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
-                  Create Account
-                </Button>
-                <Button variant="outline" size="lg" className="px-8 py-3">
-                  <Link to="/" className="text-blue-600">Try SAM Now</Link>
-                </Button>
+                <Link to="/signup">
+                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
+                    Create Account
+                  </Button>
+                </Link>
+                <Link to="/admin">
+                  <Button variant="outline" size="lg" className="px-8 py-3 text-blue-600 border-blue-600 hover:bg-blue-50">
+                    Try Dashboard
+                  </Button>
+                </Link>
+                <Link to="/">
+                  <Button variant="outline" size="lg" className="px-8 py-3">
+                    Try SAM Now
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>
