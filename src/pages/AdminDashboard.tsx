@@ -11,6 +11,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Users, MessageSquare, Globe, BarChart3, Search, Filter, Upload, FileText, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 // Mock data for demonstration
 const keyMetrics = {
@@ -142,13 +143,33 @@ const AdminDashboard = () => {
                 <p className="text-gray-600">Monitor platform usage and moderate conversations</p>
               </div>
             </div>
-            <Button 
-              onClick={() => navigate('/meeting')}
-              className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
-            >
-              <Plus className="w-4 h-4" />
-              Create a new meeting
-            </Button>
+            <div className="flex items-center space-x-6">
+              <Link
+                to="/project"
+                className="text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                Project
+              </Link>
+              <Link
+                to="/admin"
+                className="text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                Dashboard
+              </Link>
+              <Link
+                to="/meeting"
+                className="text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                Meeting
+              </Link>
+              <Button 
+                onClick={() => navigate('/meeting')}
+                className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                Create a new meeting
+              </Button>
+            </div>
           </div>
 
           {/* Key Metrics */}
