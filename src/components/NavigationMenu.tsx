@@ -9,6 +9,7 @@ export const NavigationMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
+    { label: 'Project', href: '/project' },
     { label: 'Login', href: '#', disabled: true },
     { label: 'Dashboard', href: '/admin' },
     { label: 'Meeting', href: '/meeting' }
