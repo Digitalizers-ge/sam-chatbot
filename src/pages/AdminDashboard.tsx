@@ -163,6 +163,14 @@ const AdminDashboard = () => {
               >
                 Meeting
               </Link>
+              <a
+                href="https://github.com/Digitalizers-ge/sam-chatbot"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-600 hover:text-gray-900 transition-colors"
+              >
+                Docs
+              </a>
               <Button 
                 onClick={() => navigate('/meeting')}
                 className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"

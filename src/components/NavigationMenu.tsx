@@ -12,7 +12,7 @@ export const NavigationMenu = () => {
     { label: 'Project', href: '/project' },
     { label: 'Dashboard', href: '/admin' },
     { label: 'Meeting', href: '/meeting' },
-    { label: 'Docs', href: '/docs' }
+    { label: 'Docs', href: 'https://github.com/Digitalizers-ge/sam-chatbot', external: true }
   ];
 
   return (
@@ -20,13 +20,25 @@ export const NavigationMenu = () => {
       {/* Desktop Navigation */}
       <nav className="hidden md:flex items-center space-x-6">
         {menuItems.map((item) => (
-          <Link
-            key={item.label}
-            to={item.href}
-            className="text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            {item.label}
-          </Link>
+          item.external ? (
+            <a
+              key={item.label}
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              {item.label}
+            </a>
+          ) : (
+            <Link
+              key={item.label}
+              to={item.href}
+              className="text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              {item.label}
+            </Link>
+          )
         ))}
         <Link to="/login">
           <Button className="bg-blue-600 hover:bg-blue-700 text-white">
@@ -45,14 +57,27 @@ export const NavigationMenu = () => {
         <SheetContent side="right" className="w-[300px]">
           <div className="flex flex-col space-y-4 mt-8">
             {menuItems.map((item) => (
-              <Link
-                key={item.label}
-                to={item.href}
-                className="text-lg text-gray-600 hover:text-gray-900 transition-colors py-2"
-                onClick={() => setIsOpen(false)}
-              >
-                {item.label}
-              </Link>
+              item.external ? (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-lg text-gray-600 hover:text-gray-900 transition-colors py-2"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.label}
+                  to={item.href}
+                  className="text-lg text-gray-600 hover:text-gray-900 transition-colors py-2"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              )
             ))}
             <Link
               to="/login"
