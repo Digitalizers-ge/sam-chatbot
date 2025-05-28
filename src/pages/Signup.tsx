@@ -6,7 +6,10 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { NavigationMenu } from '@/components/NavigationMenu';
 import { Eye, EyeOff } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { useEffect } from 'react';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -18,6 +21,18 @@ const Signup = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { signUp, user } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/', { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -26,14 +41,59 @@ const Signup = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match');
+      toast({
+        title: "Error",
+        description: "Passwords do not match",
+        variant: "destructive",
+      });
       return;
     }
-    console.log('Signup attempt:', formData);
-    // Signup logic would go here
+
+    if (formData.password.length < 6) {
+      toast({
+        title: "Error",
+        description: "Password must be at least 6 characters long",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const { error } = await signUp(
+        formData.email,
+        formData.password,
+        formData.firstName,
+        formData.lastName
+      );
+      
+      if (error) {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "Account created successfully! Please check your email to verify your account.",
+        });
+        navigate('/login');
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -72,6 +132,7 @@ const Signup = () => {
                     value={formData.firstName}
                     onChange={handleChange}
                     required
+                    disabled={isLoading}
                   />
                 </div>
                 <div className="space-y-2">
@@ -83,6 +144,7 @@ const Signup = () => {
                     value={formData.lastName}
                     onChange={handleChange}
                     required
+                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -96,6 +158,7 @@ const Signup = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  disabled={isLoading}
                 />
               </div>
               
@@ -109,6 +172,7 @@ const Signup = () => {
                     value={formData.password}
                     onChange={handleChange}
                     required
+                    disabled={isLoading}
                   />
                   <Button
                     type="button"
@@ -116,6 +180,7 @@ const Signup = () => {
                     size="icon"
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8"
                     onClick={() => setShowPassword(!showPassword)}
+                    disabled={isLoading}
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -136,6 +201,7 @@ const Signup = () => {
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     required
+                    disabled={isLoading}
                   />
                   <Button
                     type="button"
@@ -143,6 +209,7 @@ const Signup = () => {
                     size="icon"
                     className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    disabled={isLoading}
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -153,8 +220,12 @@ const Signup = () => {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                Create Account
+              <Button 
+                type="submit" 
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Creating Account...' : 'Create Account'}
               </Button>
             </form>
 

@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const NavigationMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   const menuItems = [
     { label: 'Project', href: '/project' },
@@ -14,6 +16,11 @@ export const NavigationMenu = () => {
     { label: 'Meeting', href: '/meeting' },
     { label: 'Docs', href: 'https://github.com/Digitalizers-ge/sam-chatbot', external: true }
   ];
+
+  const handleSignOut = async () => {
+    await signOut();
+    setIsOpen(false);
+  };
 
   return (
     <>
@@ -40,11 +47,21 @@ export const NavigationMenu = () => {
             </Link>
           )
         ))}
-        <Link to="/login">
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-            Login
+        {user ? (
+          <Button
+            onClick={handleSignOut}
+            variant="outline"
+            className="text-gray-600 hover:text-gray-900"
+          >
+            Sign Out
           </Button>
-        </Link>
+        ) : (
+          <Link to="/login">
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+              Login
+            </Button>
+          </Link>
+        )}
       </nav>
 
       {/* Mobile Navigation */}
@@ -79,15 +96,25 @@ export const NavigationMenu = () => {
                 </Link>
               )
             ))}
-            <Link
-              to="/login"
-              className="mt-4"
-              onClick={() => setIsOpen(false)}
-            >
-              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                Login
+            {user ? (
+              <Button
+                onClick={handleSignOut}
+                variant="outline"
+                className="w-full mt-4 text-gray-600 hover:text-gray-900"
+              >
+                Sign Out
               </Button>
-            </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="mt-4"
+                onClick={() => setIsOpen(false)}
+              >
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                  Login
+                </Button>
+              </Link>
+            )}
           </div>
         </SheetContent>
       </Sheet>
