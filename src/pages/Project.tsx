@@ -3,21 +3,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { NavigationMenu } from '@/components/NavigationMenu';
 import { MessageSquare, Globe, BarChart3, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
 const Project = () => {
-  return (
-    <div className="min-h-screen sam-gradient-bg">
+  return <div className="min-h-screen sam-gradient-bg">
       {/* Header */}
       <div className="w-full px-4 py-6">
         <div className="max-w-7xl mx-auto">
           {/* Navigation Bar */}
           <div className="flex justify-between items-center mb-8">
             <div className="flex items-center gap-4">
-              <img 
-                src="/lovable-uploads/22846939-a307-4be2-b1d0-39a60a6cf0de.png" 
-                alt="SAM Logo" 
-                className="h-10 w-auto"
-              />
+              <img src="/lovable-uploads/22846939-a307-4be2-b1d0-39a60a6cf0de.png" alt="SAM Logo" className="h-24 w-auto" />
             </div>
             <NavigationMenu />
           </div>
@@ -213,8 +207,6 @@ const Project = () => {
           </Card>
         </section>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Project;
