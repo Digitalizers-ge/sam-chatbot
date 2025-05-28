@@ -131,6 +131,16 @@ const AdminDashboard = () => {
       setUploadedFile(null);
     }
   };
+
+  const generateRandomId = () => {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  };
+
+  const handleCreateMeeting = () => {
+    const meetingId = generateRandomId();
+    navigate(`/meeting?id=${meetingId}`);
+  };
+
   return <div className="min-h-screen sam-gradient-bg">
       <div className="min-h-screen bg-white/10 backdrop-blur-sm p-6">
         <div className="max-w-7xl mx-auto">
@@ -172,7 +182,7 @@ const AdminDashboard = () => {
                 Docs
               </a>
               <Button 
-                onClick={() => navigate('/meeting')}
+                onClick={handleCreateMeeting}
                 className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
               >
                 <Plus className="w-4 h-4" />
