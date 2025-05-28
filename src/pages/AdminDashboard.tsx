@@ -11,64 +11,9 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Users, MessageSquare, Globe, BarChart3, Search, Filter, Upload, FileText, Plus } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useKPIs } from '@/hooks/useKPIs';
 
-// Mock data for demonstration
-const keyMetrics = {
-  totalQuestions: 1248,
-  totalSessions: 856,
-  averageQuestionsPerSession: 1.46,
-  activeUsers: 342
-};
-const languageData = [{
-  language: 'English',
-  count: 456,
-  percentage: 36.5
-}, {
-  language: 'Arabic',
-  count: 298,
-  percentage: 23.9
-}, {
-  language: 'French',
-  count: 186,
-  percentage: 14.9
-}, {
-  language: 'German',
-  count: 142,
-  percentage: 11.4
-}, {
-  language: 'Spanish',
-  count: 98,
-  percentage: 7.9
-}, {
-  language: 'Other',
-  count: 68,
-  percentage: 5.4
-}];
-const countryData = [{
-  country: 'Germany',
-  users: 145,
-  color: '#8884d8'
-}, {
-  country: 'France',
-  users: 98,
-  color: '#82ca9d'
-}, {
-  country: 'Italy',
-  users: 76,
-  color: '#ffc658'
-}, {
-  country: 'Spain',
-  users: 54,
-  color: '#ff7300'
-}, {
-  country: 'Netherlands',
-  users: 32,
-  color: '#00ff00'
-}, {
-  country: 'Other',
-  users: 67,
-  color: '#0088fe'
-}];
+// Mock data for messages (keeping this for now since we haven't created messages table yet)
 const mockMessages = [{
   id: '1',
   timestamp: new Date('2024-01-15T10:30:00'),
@@ -97,24 +42,42 @@ const mockMessages = [{
   sessionId: 'session_003',
   flagged: false
 }];
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const { kpis, loading } = useKPIs();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterLanguage, setFilterLanguage] = useState('all');
   const [filterFlagged, setFilterFlagged] = useState('all');
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+
+  // Transform KPI data for charts
+  const languageData = kpis?.languages.map((language, index) => ({
+    language,
+    count: Math.floor(Math.random() * 500) + 50, // Mock count for now
+    percentage: ((Math.floor(Math.random() * 500) + 50) / (kpis?.total_questions || 1) * 100).toFixed(1)
+  })) || [];
+
+  const countryData = Object.entries(kpis?.users_by_country || {}).map(([country, users], index) => ({
+    country,
+    users: Number(users),
+    color: ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#00ff00', '#0088fe'][index % 6]
+  }));
+
   const chartConfig = {
     count: {
       label: "Usage Count",
       color: "#8884d8"
     }
   };
+
   const filteredMessages = mockMessages.filter(message => {
     const matchesSearch = message.userMessage.toLowerCase().includes(searchTerm.toLowerCase()) || message.assistantMessage.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesLanguage = filterLanguage === 'all' || message.language === filterLanguage;
     const matchesFlagged = filterFlagged === 'all' || filterFlagged === 'flagged' && message.flagged || filterFlagged === 'not-flagged' && !message.flagged;
     return matchesSearch && matchesLanguage && matchesFlagged;
   });
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && file.type === 'application/pdf') {
@@ -123,9 +86,9 @@ const AdminDashboard = () => {
       alert('Please select a PDF file');
     }
   };
+
   const handleUploadSubmit = () => {
     if (uploadedFile) {
-      // Here you would implement the actual upload logic
       console.log('Uploading file:', uploadedFile.name);
       alert(`File "${uploadedFile.name}" would be uploaded to train the model`);
       setUploadedFile(null);
@@ -140,6 +103,17 @@ const AdminDashboard = () => {
     const meetingId = generateRandomId();
     navigate(`/meeting?id=${meetingId}`);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen sam-gradient-bg flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+          <p className="mt-4 text-gray-600">Loading dashboard data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return <div className="min-h-screen sam-gradient-bg">
       <div className="min-h-screen bg-white/10 backdrop-blur-sm p-6">
@@ -199,8 +173,8 @@ const AdminDashboard = () => {
                 <MessageSquare className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{keyMetrics.totalQuestions.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">+12% from last month</p>
+                <div className="text-2xl font-bold">{kpis?.total_questions.toLocaleString() || '0'}</div>
+                <p className="text-xs text-muted-foreground">From Supabase KPIs</p>
               </CardContent>
             </Card>
 
@@ -210,8 +184,8 @@ const AdminDashboard = () => {
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{keyMetrics.totalSessions.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">+8% from last month</p>
+                <div className="text-2xl font-bold">{kpis?.active_sessions.toLocaleString() || '0'}</div>
+                <p className="text-xs text-muted-foreground">From Supabase KPIs</p>
               </CardContent>
             </Card>
 
@@ -221,8 +195,8 @@ const AdminDashboard = () => {
                 <BarChart3 className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{keyMetrics.averageQuestionsPerSession}</div>
-                <p className="text-xs text-muted-foreground">+0.2 from last month</p>
+                <div className="text-2xl font-bold">{kpis?.avg_questions_per_session || '0'}</div>
+                <p className="text-xs text-muted-foreground">From Supabase KPIs</p>
               </CardContent>
             </Card>
 
@@ -232,8 +206,8 @@ const AdminDashboard = () => {
                 <Globe className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{keyMetrics.activeUsers.toLocaleString()}</div>
-                <p className="text-xs text-muted-foreground">+15% from last month</p>
+                <div className="text-2xl font-bold">{kpis?.active_users.toLocaleString() || '0'}</div>
+                <p className="text-xs text-muted-foreground">From Supabase KPIs</p>
               </CardContent>
             </Card>
           </div>
@@ -372,7 +346,7 @@ const AdminDashboard = () => {
             </CardContent>
           </Card>
 
-          {/* Knowledge Upload Section - Moved to bottom */}
+          {/* Knowledge Upload Section */}
           <Card className="mt-8 sam-glass">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">

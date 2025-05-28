@@ -9,7 +9,42 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      kpis: {
+        Row: {
+          active_sessions: number
+          active_users: number
+          avg_questions_per_session: number
+          created_at: string
+          id: string
+          languages: string[]
+          total_questions: number
+          updated_at: string
+          users_by_country: Json
+        }
+        Insert: {
+          active_sessions?: number
+          active_users?: number
+          avg_questions_per_session?: number
+          created_at?: string
+          id?: string
+          languages?: string[]
+          total_questions?: number
+          updated_at?: string
+          users_by_country?: Json
+        }
+        Update: {
+          active_sessions?: number
+          active_users?: number
+          avg_questions_per_session?: number
+          created_at?: string
+          id?: string
+          languages?: string[]
+          total_questions?: number
+          updated_at?: string
+          users_by_country?: Json
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
