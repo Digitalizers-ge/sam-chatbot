@@ -17,18 +17,16 @@ export const NavigationMenu = () => {
   return (
     <>
       {/* Desktop Navigation */}
-      <nav className="hidden md:flex items-center justify-between w-full">
-        <div className="flex items-center space-x-6">
-          {menuItems.map((item) => (
-            <Link
-              key={item.label}
-              to={item.href}
-              className="text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </div>
+      <nav className="hidden md:flex items-center space-x-6">
+        {menuItems.map((item) => (
+          <Link
+            key={item.label}
+            to={item.href}
+            className="text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            {item.label}
+          </Link>
+        ))}
         <Link to="/login">
           <Button className="bg-blue-600 hover:bg-blue-700 text-white">
             Login

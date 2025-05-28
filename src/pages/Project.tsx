@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { NavigationMenu } from '@/components/NavigationMenu';
@@ -19,7 +18,6 @@ const Project = () => {
                 alt="SAM Logo" 
                 className="h-10 w-auto"
               />
-              <Link to="/" className="text-2xl font-bold text-gray-800">SAM</Link>
             </div>
             <NavigationMenu />
           </div>
