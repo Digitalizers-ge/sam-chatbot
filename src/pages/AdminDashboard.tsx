@@ -116,58 +116,17 @@ const AdminDashboard = () => {
     <div className="min-h-screen sam-gradient-bg">
       <div className="min-h-screen bg-white/10 backdrop-blur-sm p-6">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
-            <p className="text-gray-600">Monitor platform usage and moderate conversations</p>
+          <div className="mb-8 flex items-center gap-4">
+            <img 
+              src="/lovable-uploads/22846939-a307-4be2-b1d0-39a60a6cf0de.png" 
+              alt="SAM Logo" 
+              className="h-12 w-auto"
+            />
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
+              <p className="text-gray-600">Monitor platform usage and moderate conversations</p>
+            </div>
           </div>
-
-          {/* Knowledge Upload Section */}
-          <Card className="mb-8 sam-glass">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
-                Model Training
-              </CardTitle>
-              <CardDescription>
-                Upload PDF documents to teach the model about your own contextual information
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="pdf-upload">Upload PDF Document</Label>
-                <div className="flex items-center gap-4">
-                  <Input
-                    id="pdf-upload"
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleFileUpload}
-                    className="flex-1"
-                  />
-                  <Button 
-                    onClick={handleUploadSubmit} 
-                    disabled={!uploadedFile}
-                    className="flex items-center gap-2"
-                  >
-                    <Upload className="h-4 w-4" />
-                    Upload
-                  </Button>
-                </div>
-                {uploadedFile && (
-                  <p className="text-sm text-green-600">
-                    Selected: {uploadedFile.name} ({(uploadedFile.size / 1024 / 1024).toFixed(2)} MB)
-                  </p>
-                )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="context-description">Context Description (Optional)</Label>
-                <Textarea
-                  id="context-description"
-                  placeholder="Describe what this document contains and how it should be used by the model..."
-                  className="min-h-[80px]"
-                />
-              </div>
-            </CardContent>
-          </Card>
 
           {/* Key Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -363,6 +322,54 @@ const AdminDashboard = () => {
                     ))}
                   </TableBody>
                 </Table>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Knowledge Upload Section - Moved to bottom */}
+          <Card className="mt-8 sam-glass">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                Model Training
+              </CardTitle>
+              <CardDescription>
+                Upload PDF documents to teach the model about your own contextual information
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="pdf-upload">Upload PDF Document</Label>
+                <div className="flex items-center gap-4">
+                  <Input
+                    id="pdf-upload"
+                    type="file"
+                    accept=".pdf"
+                    onChange={handleFileUpload}
+                    className="flex-1"
+                  />
+                  <Button 
+                    onClick={handleUploadSubmit} 
+                    disabled={!uploadedFile}
+                    className="flex items-center gap-2"
+                  >
+                    <Upload className="h-4 w-4" />
+                    Upload
+                  </Button>
+                </div>
+                {uploadedFile && (
+                  <p className="text-sm text-green-600">
+                    Selected: {uploadedFile.name} ({(uploadedFile.size / 1024 / 1024).toFixed(2)} MB)
+                  </p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="context-description">Context Description (Optional)</Label>
+                <Textarea
+                  id="context-description"
+                  placeholder="Describe what this document contains and how it should be used by the model..."
+                  className="min-h-[80px]"
+                />
               </div>
             </CardContent>
           </Card>
