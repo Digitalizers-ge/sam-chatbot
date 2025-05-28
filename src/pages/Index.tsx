@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { VoiceOrb } from '@/components/VoiceOrb';
@@ -223,7 +224,6 @@ const Index = () => {
           {/* Navigation Bar */}
           <div className="flex justify-between items-center mb-8">
             <div className="flex items-center gap-4">
-              <img src="/lovable-uploads/22846939-a307-4be2-b1d0-39a60a6cf0de.png" alt="SAM Logo" className="h-16 w-auto" />
             </div>
             <NavigationMenu />
           </div>
