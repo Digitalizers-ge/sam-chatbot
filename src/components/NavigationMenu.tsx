@@ -10,7 +10,7 @@ export const NavigationMenu = () => {
 
   const menuItems = [
     { label: 'Project', href: '/project' },
-    { label: 'Login', href: '#', disabled: true },
+    { label: 'Login', href: '/login' },
     { label: 'Dashboard', href: '/admin' },
     { label: 'Meeting', href: '/meeting' }
   ];
@@ -23,10 +23,7 @@ export const NavigationMenu = () => {
           <Link
             key={item.label}
             to={item.href}
-            className={`text-gray-600 hover:text-gray-900 transition-colors ${
-              item.disabled ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-            onClick={(e) => item.disabled && e.preventDefault()}
+            className="text-gray-600 hover:text-gray-900 transition-colors"
           >
             {item.label}
           </Link>
@@ -46,16 +43,8 @@ export const NavigationMenu = () => {
               <Link
                 key={item.label}
                 to={item.href}
-                className={`text-lg text-gray-600 hover:text-gray-900 transition-colors py-2 ${
-                  item.disabled ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-                onClick={(e) => {
-                  if (item.disabled) {
-                    e.preventDefault();
-                  } else {
-                    setIsOpen(false);
-                  }
-                }}
+                className="text-lg text-gray-600 hover:text-gray-900 transition-colors py-2"
+                onClick={() => setIsOpen(false)}
               >
                 {item.label}
               </Link>
