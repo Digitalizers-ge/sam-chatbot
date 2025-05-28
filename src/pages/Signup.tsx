@@ -44,7 +44,7 @@ const Signup = () => {
           {/* Navigation Bar */}
           <div className="flex justify-between items-center mb-8">
             <div className="flex items-center gap-4">
-              <Link to="/" className="text-2xl font-bold text-gray-800">SAM</Link>
+              <Link to="/" className="text-2xl font-bold text-gray-800 hover:text-gray-600 transition-colors">SAM</Link>
             </div>
             <NavigationMenu />
           </div>

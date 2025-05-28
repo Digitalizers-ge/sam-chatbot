@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, FileText, Folder, Download } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
 interface GitHubFile {
@@ -96,7 +96,9 @@ const Docs = () => {
           
           <div className="flex flex-col items-center py-8">
             <div className="flex flex-col items-center mb-6">
-              <img src="/lovable-uploads/22846939-a307-4be2-b1d0-39a60a6cf0de.png" alt="SAM Logo" className="h-36 w-auto mb-2" />
+              <Link to="/" className="hover:opacity-80 transition-opacity">
+                <img src="/lovable-uploads/22846939-a307-4be2-b1d0-39a60a6cf0de.png" alt="SAM Logo" className="h-36 w-auto mb-2" />
+              </Link>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Documentation</h1>
               <p className="text-lg text-gray-600 text-center">Browse files from the SAM Chatbot repository</p>
             </div>
