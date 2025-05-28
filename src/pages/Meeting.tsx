@@ -30,6 +30,14 @@ const Meeting = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  const handleBackClick = () => {
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      window.location.href = 'https://sam-bot.site/admin';
+    }
+  };
+
   const speakText = async (text: string, language: string = 'en') => {
     try {
       console.log('Sending text to Amazon Polly:', text);
@@ -190,7 +198,7 @@ const Meeting = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-6">
             <Button
-              onClick={() => navigate(-1)}
+              onClick={handleBackClick}
               variant="ghost"
               className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
             >
