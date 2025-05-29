@@ -12,6 +12,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/
 import { Users, MessageSquare, Globe, BarChart3, Search, Filter, Upload, FileText, Plus } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useKPIs } from '@/hooks/useKPIs';
+import { NavigationMenu } from '@/components/NavigationMenu';
 
 // Mock data for messages (keeping this for now since we haven't created messages table yet)
 const mockMessages = [{
@@ -128,33 +129,7 @@ const AdminDashboard = () => {
                 <p className="text-gray-600">Monitor platform usage and moderate conversations</p>
               </div>
             </div>
-            <div className="flex items-center space-x-6">
-              <Link
-                to="/project"
-                className="text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                Project
-              </Link>
-              <Link
-                to="/admin"
-                className="text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                Dashboard
-              </Link>
-              <Link
-                to="/meeting"
-                className="text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                Meeting
-              </Link>
-              <a
-                href="https://github.com/Digitalizers-ge/sam-chatbot"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                Docs
-              </a>
+            <div className="flex items-center gap-4">
               <Button 
                 onClick={handleCreateMeeting}
                 className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
@@ -162,6 +137,7 @@ const AdminDashboard = () => {
                 <Plus className="w-4 h-4" />
                 Create a new meeting
               </Button>
+              <NavigationMenu />
             </div>
           </div>
 
