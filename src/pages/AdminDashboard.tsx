@@ -42,6 +42,7 @@ const AdminDashboard = () => {
     const fetchConversations = async () => {
       try {
         setConversationsLoading(true);
+        console.log('🔍 ADMIN_DASHBOARD: Fetching conversations from Supabase...');
         const { data, error } = await supabase
           .from('conversations')
           .select('*')
@@ -49,9 +50,11 @@ const AdminDashboard = () => {
           .limit(100);
 
         if (error) {
-          console.error('Error fetching conversations:', error);
+          console.error('🔍 ADMIN_DASHBOARD: Error fetching conversations:', error);
           return;
         }
+
+        console.log('🔍 ADMIN_DASHBOARD: Raw conversations data from Supabase:', data);
 
         const formattedConversations: ConversationMessage[] = data.map(conv => ({
           id: conv.id,
@@ -64,9 +67,10 @@ const AdminDashboard = () => {
           flagged: false, // TODO: Implement flagging system
         }));
 
+        console.log('🔍 ADMIN_DASHBOARD: Formatted conversations:', formattedConversations);
         setConversations(formattedConversations);
       } catch (error) {
-        console.error('Error fetching conversations:', error);
+        console.error('🔍 ADMIN_DASHBOARD: Exception while fetching conversations:', error);
       } finally {
         setConversationsLoading(false);
       }
@@ -84,6 +88,10 @@ const AdminDashboard = () => {
       percentage: ((count / (conversations.length || 1)) * 100).toFixed(1)
     };
   }) || [];
+
+  console.log('🔍 ADMIN_DASHBOARD: Language data for chart:', languageData);
+  console.log('🔍 ADMIN_DASHBOARD: KPIs data:', kpis);
+  console.log('🔍 ADMIN_DASHBOARD: Conversations count:', conversations.length);
 
   const countryData = Object.entries(kpis?.users_by_country || {}).map(([country, users], index) => ({
     country,
@@ -169,14 +177,13 @@ const AdminDashboard = () => {
                   <Plus className="w-4 h-4" />
                   Create a new meeting
                 </Button>
-                {/* Navigation is now positioned absolutely on mobile */}
+                {/* Desktop navigation */}
                 <div className="hidden md:block">
                   <NavigationMenu />
                 </div>
               </div>
             </div>
-            {/* Mobile navigation is now handled by the NavigationMenu component itself */}
-            <NavigationMenu />
+            {/* Mobile navigation is handled by the NavigationMenu component itself with fixed positioning */}
           </div>
 
           {/* Key Metrics - Responsive grid */}
@@ -236,17 +243,17 @@ const AdminDashboard = () => {
               <CardContent className="overflow-hidden">
                 <ChartContainer config={chartConfig} className="h-[250px] md:h-[300px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={languageData} margin={{ top: 20, right: 20, left: 20, bottom: 40 }}>
+                    <BarChart data={languageData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis 
                         dataKey="language" 
-                        fontSize={10}
+                        fontSize={12}
                         angle={-45}
                         textAnchor="end"
-                        height={60}
+                        height={80}
                         interval={0}
                       />
-                      <YAxis fontSize={10} />
+                      <YAxis fontSize={12} />
                       <ChartTooltip content={<ChartTooltipContent />} />
                       <Bar dataKey="count" fill="var(--color-count)" />
                     </BarChart>
