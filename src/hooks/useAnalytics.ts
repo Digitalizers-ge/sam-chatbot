@@ -10,8 +10,10 @@ export const useAnalytics = () => {
     language: string = 'en', 
     userCountry?: string
   ) => {
-    console.log('Tracking user question:', { question, language, userCountry, sessionId });
-    return await addMessage(question, 'user', language, userCountry);
+    console.log('🔍 ANALYTICS: Tracking user question:', { question, language, userCountry, sessionId });
+    const result = await addMessage(question, 'user', language, userCountry);
+    console.log('🔍 ANALYTICS: User question tracked, result:', result);
+    return result;
   };
 
   const trackAssistantResponse = async (
@@ -19,8 +21,10 @@ export const useAnalytics = () => {
     language: string = 'en', 
     userCountry?: string
   ) => {
-    console.log('Tracking assistant response:', { response, language, userCountry, sessionId });
-    return await addMessage(response, 'assistant', language, userCountry);
+    console.log('🔍 ANALYTICS: Tracking assistant response:', { response, language, userCountry, sessionId });
+    const result = await addMessage(response, 'assistant', language, userCountry);
+    console.log('🔍 ANALYTICS: Assistant response tracked, result:', result);
+    return result;
   };
 
   return {

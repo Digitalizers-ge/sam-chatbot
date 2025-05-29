@@ -18,6 +18,7 @@ export const useConversationLogger = () => {
   const logConversation = async (data: ConversationData) => {
     try {
       setLoading(true);
+      console.log('🔍 CONVERSATION_LOGGER: Starting to log conversation:', data);
       
       const { data: result, error } = await supabase.rpc('log_conversation', {
         p_session_id: data.sessionId,
@@ -28,7 +29,7 @@ export const useConversationLogger = () => {
       });
 
       if (error) {
-        console.error('Error logging conversation:', error);
+        console.error('🔍 CONVERSATION_LOGGER: Error logging conversation:', error);
         toast({
           title: "Warning",
           description: "Failed to log conversation data",
@@ -37,10 +38,10 @@ export const useConversationLogger = () => {
         return null;
       }
 
-      console.log('Conversation logged successfully:', result);
+      console.log('🔍 CONVERSATION_LOGGER: Conversation logged successfully:', result);
       return result;
     } catch (error) {
-      console.error('Error logging conversation:', error);
+      console.error('🔍 CONVERSATION_LOGGER: Exception while logging conversation:', error);
       toast({
         title: "Warning", 
         description: "Failed to log conversation data",

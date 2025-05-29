@@ -107,7 +107,9 @@ const Index = () => {
 };
 
     
-    return langMap[langCode] || 'en';
+    const result = langMap[langCode] || 'en';
+    console.log('🔍 INDEX: Language code mapping:', langCode, '->', result);
+    return result;
   };
 
   const speakText = async (text: string) => {
@@ -198,17 +200,31 @@ const Index = () => {
   };
 
   const handleAudioProcessed = async (originalText: string, translatedText: string) => {
-    console.log('Audio processed - Original:', originalText, 'Translated:', translatedText);
+    console.log('🔍 INDEX: Audio processed - Original:', originalText, 'Translated:', translatedText);
 
     // Get user's country (you could implement geolocation or user input for this)
-    const userCountry = 'Unknown'; // You can enhance this with actual country detection
+    const userCountry = 'Test_Country'; // Changed from 'Unknown' to help with debugging
     const language = getLanguageCode(selectedLanguage);
 
+    console.log('🔍 INDEX: About to track user question with:', { originalText, language, userCountry });
+
     // Track user question in analytics
-    await trackUserQuestion(originalText, language, userCountry);
+    try {
+      await trackUserQuestion(originalText, language, userCountry);
+      console.log('🔍 INDEX: User question tracked successfully');
+    } catch (error) {
+      console.error('🔍 INDEX: Error tracking user question:', error);
+    }
+
+    console.log('🔍 INDEX: About to track assistant response with:', { translatedText, language, userCountry });
 
     // Track assistant response in analytics
-    await trackAssistantResponse(translatedText, language, userCountry);
+    try {
+      await trackAssistantResponse(translatedText, language, userCountry);
+      console.log('🔍 INDEX: Assistant response tracked successfully');
+    } catch (error) {
+      console.error('🔍 INDEX: Error tracking assistant response:', error);
+    }
 
     // Add user message (original text)
     const userMessage: Message = {
@@ -225,6 +241,8 @@ const Index = () => {
       isUser: false,
       timestamp: new Date()
     };
+    
+    console.log('🔍 INDEX: Adding messages to UI state');
     setMessages(prev => [...prev, userMessage, assistantMessage]);
   };
 
