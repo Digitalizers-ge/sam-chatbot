@@ -64,60 +64,62 @@ export const NavigationMenu = () => {
         )}
       </nav>
 
-      {/* Mobile Navigation */}
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetTrigger asChild className="md:hidden">
-          <Button variant="ghost" size="icon">
-            <Menu className="h-6 w-6" />
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="right" className="w-[300px]">
-          <div className="flex flex-col space-y-4 mt-8">
-            {menuItems.map((item) => (
-              item.external ? (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-lg text-gray-600 hover:text-gray-900 transition-colors py-2"
-                  onClick={() => setIsOpen(false)}
+      {/* Mobile Navigation - Fixed to top right */}
+      <div className="md:hidden fixed top-4 right-4 z-50">
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="bg-white/80 backdrop-blur-sm shadow-md">
+              <Menu className="h-6 w-6" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right" className="w-[300px]">
+            <div className="flex flex-col space-y-4 mt-8">
+              {menuItems.map((item) => (
+                item.external ? (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-lg text-gray-600 hover:text-gray-900 transition-colors py-2"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={item.label}
+                    to={item.href}
+                    className="text-lg text-gray-600 hover:text-gray-900 transition-colors py-2"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              ))}
+              {user ? (
+                <Button
+                  onClick={handleSignOut}
+                  variant="outline"
+                  className="w-full mt-4 text-gray-600 hover:text-gray-900"
                 >
-                  {item.label}
-                </a>
+                  Sign Out
+                </Button>
               ) : (
                 <Link
-                  key={item.label}
-                  to={item.href}
-                  className="text-lg text-gray-600 hover:text-gray-900 transition-colors py-2"
+                  to="/login"
+                  className="mt-4"
                   onClick={() => setIsOpen(false)}
                 >
-                  {item.label}
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                    Login
+                  </Button>
                 </Link>
-              )
-            ))}
-            {user ? (
-              <Button
-                onClick={handleSignOut}
-                variant="outline"
-                className="w-full mt-4 text-gray-600 hover:text-gray-900"
-              >
-                Sign Out
-              </Button>
-            ) : (
-              <Link
-                to="/login"
-                className="mt-4"
-                onClick={() => setIsOpen(false)}
-              >
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                  Login
-                </Button>
-              </Link>
-            )}
-          </div>
-        </SheetContent>
-      </Sheet>
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
     </>
   );
 };

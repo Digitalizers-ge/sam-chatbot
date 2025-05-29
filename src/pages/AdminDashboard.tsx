@@ -149,8 +149,8 @@ const AdminDashboard = () => {
     <div className="min-h-screen sam-gradient-bg">
       <div className="min-h-screen bg-white/10 backdrop-blur-sm p-3 md:p-6">
         <div className="max-w-7xl mx-auto">
-          {/* Mobile-responsive header */}
-          <div className="mb-6 md:mb-8">
+          {/* Mobile-responsive header with NavigationMenu positioned correctly */}
+          <div className="mb-6 md:mb-8 relative">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                 <Link to="/" className="hover:opacity-80 transition-opacity">
@@ -169,9 +169,14 @@ const AdminDashboard = () => {
                   <Plus className="w-4 h-4" />
                   Create a new meeting
                 </Button>
-                <NavigationMenu />
+                {/* Navigation is now positioned absolutely on mobile */}
+                <div className="hidden md:block">
+                  <NavigationMenu />
+                </div>
               </div>
             </div>
+            {/* Mobile navigation is now handled by the NavigationMenu component itself */}
+            <NavigationMenu />
           </div>
 
           {/* Key Metrics - Responsive grid */}
@@ -221,20 +226,27 @@ const AdminDashboard = () => {
             </Card>
           </div>
 
-          {/* Charts - Mobile responsive */}
+          {/* Charts - Mobile responsive with fixed overflow */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
             <Card className="sam-glass">
               <CardHeader>
                 <CardTitle className="text-lg md:text-xl">Languages Usage</CardTitle>
                 <CardDescription className="text-sm">Most used languages on the platform</CardDescription>
               </CardHeader>
-              <CardContent>
-                <ChartContainer config={chartConfig} className="h-[250px] md:h-[300px]">
+              <CardContent className="overflow-hidden">
+                <ChartContainer config={chartConfig} className="h-[250px] md:h-[300px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={languageData} margin={{ top: 20, right: 20, left: 0, bottom: 20 }}>
+                    <BarChart data={languageData} margin={{ top: 20, right: 20, left: 20, bottom: 40 }}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="language" fontSize={12} />
-                      <YAxis fontSize={12} />
+                      <XAxis 
+                        dataKey="language" 
+                        fontSize={10}
+                        angle={-45}
+                        textAnchor="end"
+                        height={60}
+                        interval={0}
+                      />
+                      <YAxis fontSize={10} />
                       <ChartTooltip content={<ChartTooltipContent />} />
                       <Bar dataKey="count" fill="var(--color-count)" />
                     </BarChart>
@@ -248,8 +260,8 @@ const AdminDashboard = () => {
                 <CardTitle className="text-lg md:text-xl">Users by Country</CardTitle>
                 <CardDescription className="text-sm">Geographic distribution of users</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="h-[250px] md:h-[300px]">
+              <CardContent className="overflow-hidden">
+                <div className="h-[250px] md:h-[300px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
                       <Pie 
