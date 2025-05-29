@@ -15,6 +15,7 @@ export interface TrackedMessage {
 export const useTrackedConversation = () => {
   const [messages, setMessages] = useState<TrackedMessage[]>([]);
   const [currentSessionId] = useState(() => SessionManager.getCurrentSessionId());
+  const [pendingUserMessage, setPendingUserMessage] = useState<TrackedMessage | null>(null);
   const { logConversation } = useConversationLogger();
 
   console.log('🔍 TRACKED_CONVERSATION: Hook initialized with sessionId:', currentSessionId);
@@ -36,6 +37,7 @@ export const useTrackedConversation = () => {
       userCountry,
     };
 
+    // Update messages state
     setMessages(prev => {
       console.log('🔍 TRACKED_CONVERSATION: Previous messages count:', prev.length);
       const updated = [...prev, newMessage];
@@ -43,36 +45,43 @@ export const useTrackedConversation = () => {
       return updated;
     });
 
-    // Log conversation when we have both user message and assistant response
-    if (sender === 'assistant' && messages.length > 0) {
-      const lastUserMessage = messages[messages.length - 1];
-      console.log('🔍 TRACKED_CONVERSATION: Last user message:', lastUserMessage);
+    // Handle conversation logging logic
+    if (sender === 'user') {
+      // Store user message for when assistant responds
+      console.log('🔍 TRACKED_CONVERSATION: Storing user message for later logging:', content);
+      setPendingUserMessage(newMessage);
+    } else if (sender === 'assistant' && pendingUserMessage) {
+      // We have both user message and assistant response, log to database
+      console.log('🔍 TRACKED_CONVERSATION: Logging complete conversation to database...');
+      console.log('🔍 TRACKED_CONVERSATION: User message:', pendingUserMessage.content);
+      console.log('🔍 TRACKED_CONVERSATION: Assistant message:', content);
       
-      if (lastUserMessage.sender === 'user') {
-        console.log('🔍 TRACKED_CONVERSATION: Logging conversation to database...');
-        const logResult = await logConversation({
-          sessionId: currentSessionId,
-          userCountry: lastUserMessage.userCountry || userCountry,
-          language: lastUserMessage.language || language,
-          userMessage: lastUserMessage.content,
-          assistantMessage: content,
-        });
-        console.log('🔍 TRACKED_CONVERSATION: Conversation logged, result:', logResult);
-        
-        // Update session activity
-        SessionManager.updateSessionActivity();
-        console.log('🔍 TRACKED_CONVERSATION: Session activity updated');
-      }
+      const logResult = await logConversation({
+        sessionId: currentSessionId,
+        userCountry: pendingUserMessage.userCountry || userCountry,
+        language: pendingUserMessage.language || language,
+        userMessage: pendingUserMessage.content,
+        assistantMessage: content,
+      });
+      console.log('🔍 TRACKED_CONVERSATION: Conversation logged, result:', logResult);
+      
+      // Clear pending user message
+      setPendingUserMessage(null);
+      
+      // Update session activity
+      SessionManager.updateSessionActivity();
+      console.log('🔍 TRACKED_CONVERSATION: Session activity updated');
     } else {
-      console.log('🔍 TRACKED_CONVERSATION: Not logging - sender:', sender, 'messages length:', messages.length);
+      console.log('🔍 TRACKED_CONVERSATION: Not logging - sender:', sender, 'pendingUserMessage:', !!pendingUserMessage);
     }
 
     return newMessage;
-  }, [messages, currentSessionId, logConversation]);
+  }, [pendingUserMessage, currentSessionId, logConversation]);
 
   const clearMessages = useCallback(() => {
     console.log('🔍 TRACKED_CONVERSATION: Clearing messages');
     setMessages([]);
+    setPendingUserMessage(null);
     SessionManager.clearSession();
   }, []);
 
