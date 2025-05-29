@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useConversationLogger } from './useConversationLogger';
 import { SessionManager } from '@/utils/sessionManager';
 
@@ -15,10 +15,40 @@ export interface TrackedMessage {
 export const useTrackedConversation = () => {
   const [messages, setMessages] = useState<TrackedMessage[]>([]);
   const [currentSessionId] = useState(() => SessionManager.getCurrentSessionId());
-  const [pendingUserMessage, setPendingUserMessage] = useState<TrackedMessage | null>(null);
   const { logConversation } = useConversationLogger();
 
   console.log('🔍 TRACKED_CONVERSATION: Hook initialized with sessionId:', currentSessionId);
+
+  // Helper functions to manage pending user message in sessionStorage
+  const setPendingUserMessage = useCallback((message: TrackedMessage | null) => {
+    const key = `pending_user_message_${currentSessionId}`;
+    if (message) {
+      sessionStorage.setItem(key, JSON.stringify(message));
+      console.log('🔍 TRACKED_CONVERSATION: Stored pending user message in sessionStorage:', message.content);
+    } else {
+      sessionStorage.removeItem(key);
+      console.log('🔍 TRACKED_CONVERSATION: Cleared pending user message from sessionStorage');
+    }
+  }, [currentSessionId]);
+
+  const getPendingUserMessage = useCallback((): TrackedMessage | null => {
+    const key = `pending_user_message_${currentSessionId}`;
+    const stored = sessionStorage.getItem(key);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        console.log('🔍 TRACKED_CONVERSATION: Retrieved pending user message from sessionStorage:', parsed.content);
+        return {
+          ...parsed,
+          timestamp: new Date(parsed.timestamp)
+        };
+      } catch (error) {
+        console.error('🔍 TRACKED_CONVERSATION: Error parsing stored pending user message:', error);
+        sessionStorage.removeItem(key);
+      }
+    }
+    return null;
+  }, [currentSessionId]);
 
   const addMessage = useCallback(async (
     content: string, 
@@ -53,6 +83,7 @@ export const useTrackedConversation = () => {
     } else if (sender === 'assistant') {
       // Check if we have a pending user message to pair with this assistant response
       console.log('🔍 TRACKED_CONVERSATION: Assistant message received, checking for pending user message...');
+      const pendingUserMessage = getPendingUserMessage();
       console.log('🔍 TRACKED_CONVERSATION: Current pendingUserMessage:', pendingUserMessage);
       
       if (pendingUserMessage) {
@@ -82,14 +113,14 @@ export const useTrackedConversation = () => {
     }
 
     return newMessage;
-  }, [pendingUserMessage, currentSessionId, logConversation]);
+  }, [currentSessionId, logConversation, getPendingUserMessage, setPendingUserMessage]);
 
   const clearMessages = useCallback(() => {
     console.log('🔍 TRACKED_CONVERSATION: Clearing messages');
     setMessages([]);
     setPendingUserMessage(null);
     SessionManager.clearSession();
-  }, []);
+  }, [setPendingUserMessage]);
 
   return {
     messages,
