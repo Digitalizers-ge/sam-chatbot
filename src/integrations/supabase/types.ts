@@ -9,6 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      conversations: {
+        Row: {
+          assistant_message: string | null
+          created_at: string
+          id: string
+          language: string
+          session_id: string
+          user_country: string | null
+          user_message: string
+        }
+        Insert: {
+          assistant_message?: string | null
+          created_at?: string
+          id?: string
+          language: string
+          session_id: string
+          user_country?: string | null
+          user_message: string
+        }
+        Update: {
+          assistant_message?: string | null
+          created_at?: string
+          id?: string
+          language?: string
+          session_id?: string
+          user_country?: string | null
+          user_message?: string
+        }
+        Relationships: []
+      }
       kpis: {
         Row: {
           active_sessions: number
@@ -45,12 +75,55 @@ export type Database = {
         }
         Relationships: []
       }
+      sessions: {
+        Row: {
+          id: string
+          language: string
+          last_activity: string
+          question_count: number | null
+          started_at: string
+          user_country: string | null
+          user_id: string | null
+        }
+        Insert: {
+          id?: string
+          language: string
+          last_activity?: string
+          question_count?: number | null
+          started_at?: string
+          user_country?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          id?: string
+          language?: string
+          last_activity?: string
+          question_count?: number | null
+          started_at?: string
+          user_country?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      log_conversation: {
+        Args: {
+          p_session_id: string
+          p_user_country?: string
+          p_language?: string
+          p_user_message?: string
+          p_assistant_message?: string
+        }
+        Returns: string
+      }
+      update_kpis: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,36 +14,18 @@ import { Users, MessageSquare, Globe, BarChart3, Search, Filter, Upload, FileTex
 import { useNavigate, Link } from 'react-router-dom';
 import { useKPIs } from '@/hooks/useKPIs';
 import { NavigationMenu } from '@/components/NavigationMenu';
+import { supabase } from '@/integrations/supabase/client';
 
-// Mock data for messages (keeping this for now since we haven't created messages table yet)
-const mockMessages = [{
-  id: '1',
-  timestamp: new Date('2024-01-15T10:30:00'),
-  userCountry: 'Germany',
-  language: 'English',
-  userMessage: 'What are the requirements for asylum in Germany?',
-  assistantMessage: 'To apply for asylum in Germany, you need to...',
-  sessionId: 'session_001',
-  flagged: false
-}, {
-  id: '2',
-  timestamp: new Date('2024-01-15T11:15:00'),
-  userCountry: 'France',
-  language: 'French',
-  userMessage: 'Comment puis-je faire une demande d\'asile?',
-  assistantMessage: 'Pour faire une demande d\'asile en France...',
-  sessionId: 'session_002',
-  flagged: true
-}, {
-  id: '3',
-  timestamp: new Date('2024-01-15T12:00:00'),
-  userCountry: 'Italy',
-  language: 'Arabic',
-  userMessage: 'ما هي الوثائق المطلوبة؟',
-  assistantMessage: 'الوثائق المطلوبة للجوء في إيطاليا...',
-  sessionId: 'session_003',
-  flagged: false
-}];
+interface ConversationMessage {
+  id: string;
+  timestamp: Date;
+  userCountry: string | null;
+  language: string;
+  userMessage: string;
+  assistantMessage: string | null;
+  sessionId: string;
+  flagged: boolean;
+}
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -51,13 +34,56 @@ const AdminDashboard = () => {
   const [filterLanguage, setFilterLanguage] = useState('all');
   const [filterFlagged, setFilterFlagged] = useState('all');
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [conversations, setConversations] = useState<ConversationMessage[]>([]);
+  const [conversationsLoading, setConversationsLoading] = useState(true);
 
-  // Transform KPI data for charts
-  const languageData = kpis?.languages.map((language, index) => ({
-    language,
-    count: Math.floor(Math.random() * 500) + 50, // Mock count for now
-    percentage: ((Math.floor(Math.random() * 500) + 50) / (kpis?.total_questions || 1) * 100).toFixed(1)
-  })) || [];
+  // Fetch conversations from database
+  useEffect(() => {
+    const fetchConversations = async () => {
+      try {
+        setConversationsLoading(true);
+        const { data, error } = await supabase
+          .from('conversations')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(100);
+
+        if (error) {
+          console.error('Error fetching conversations:', error);
+          return;
+        }
+
+        const formattedConversations: ConversationMessage[] = data.map(conv => ({
+          id: conv.id,
+          timestamp: new Date(conv.created_at),
+          userCountry: conv.user_country,
+          language: conv.language,
+          userMessage: conv.user_message,
+          assistantMessage: conv.assistant_message,
+          sessionId: conv.session_id,
+          flagged: false, // TODO: Implement flagging system
+        }));
+
+        setConversations(formattedConversations);
+      } catch (error) {
+        console.error('Error fetching conversations:', error);
+      } finally {
+        setConversationsLoading(false);
+      }
+    };
+
+    fetchConversations();
+  }, []);
+
+  // Transform KPI data for charts with real data
+  const languageData = kpis?.languages.map((language) => {
+    const count = conversations.filter(conv => conv.language === language).length;
+    return {
+      language,
+      count,
+      percentage: ((count / (conversations.length || 1)) * 100).toFixed(1)
+    };
+  }) || [];
 
   const countryData = Object.entries(kpis?.users_by_country || {}).map(([country, users], index) => ({
     country,
@@ -72,10 +98,13 @@ const AdminDashboard = () => {
     }
   };
 
-  const filteredMessages = mockMessages.filter(message => {
-    const matchesSearch = message.userMessage.toLowerCase().includes(searchTerm.toLowerCase()) || message.assistantMessage.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredMessages = conversations.filter(message => {
+    const matchesSearch = message.userMessage.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         (message.assistantMessage?.toLowerCase().includes(searchTerm.toLowerCase()) || false);
     const matchesLanguage = filterLanguage === 'all' || message.language === filterLanguage;
-    const matchesFlagged = filterFlagged === 'all' || filterFlagged === 'flagged' && message.flagged || filterFlagged === 'not-flagged' && !message.flagged;
+    const matchesFlagged = filterFlagged === 'all' || 
+                          filterFlagged === 'flagged' && message.flagged || 
+                          filterFlagged === 'not-flagged' && !message.flagged;
     return matchesSearch && matchesLanguage && matchesFlagged;
   });
 
@@ -105,7 +134,7 @@ const AdminDashboard = () => {
     navigate(`/meeting?id=${meetingId}`);
   };
 
-  if (loading) {
+  if (loading || conversationsLoading) {
     return (
       <div className="min-h-screen sam-gradient-bg flex items-center justify-center">
         <div className="text-center">
@@ -116,7 +145,8 @@ const AdminDashboard = () => {
     );
   }
 
-  return <div className="min-h-screen sam-gradient-bg">
+  return (
+    <div className="min-h-screen sam-gradient-bg">
       <div className="min-h-screen bg-white/10 backdrop-blur-sm p-6">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8 flex items-center justify-between">
@@ -150,7 +180,7 @@ const AdminDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{kpis?.total_questions.toLocaleString() || '0'}</div>
-                <p className="text-xs text-muted-foreground">From Supabase KPIs</p>
+                <p className="text-xs text-muted-foreground">Real-time from conversations</p>
               </CardContent>
             </Card>
 
@@ -161,7 +191,7 @@ const AdminDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{kpis?.active_sessions.toLocaleString() || '0'}</div>
-                <p className="text-xs text-muted-foreground">From Supabase KPIs</p>
+                <p className="text-xs text-muted-foreground">Last 24 hours</p>
               </CardContent>
             </Card>
 
@@ -172,7 +202,7 @@ const AdminDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{kpis?.avg_questions_per_session || '0'}</div>
-                <p className="text-xs text-muted-foreground">From Supabase KPIs</p>
+                <p className="text-xs text-muted-foreground">Calculated from sessions</p>
               </CardContent>
             </Card>
 
@@ -183,7 +213,7 @@ const AdminDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{kpis?.active_users.toLocaleString() || '0'}</div>
-                <p className="text-xs text-muted-foreground">From Supabase KPIs</p>
+                <p className="text-xs text-muted-foreground">Registered users</p>
               </CardContent>
             </Card>
           </div>
@@ -219,11 +249,18 @@ const AdminDashboard = () => {
                 <div className="h-[300px]">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie data={countryData} cx="50%" cy="50%" outerRadius={80} fill="#8884d8" dataKey="users" label={({
-                      country,
-                      users
-                    }) => `${country}: ${users}`}>
-                        {countryData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
+                      <Pie 
+                        data={countryData} 
+                        cx="50%" 
+                        cy="50%" 
+                        outerRadius={80} 
+                        fill="#8884d8" 
+                        dataKey="users" 
+                        label={({ country, users }) => `${country}: ${users}`}
+                      >
+                        {countryData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
                       </Pie>
                       <Tooltip />
                     </PieChart>
@@ -245,7 +282,12 @@ const AdminDashboard = () => {
                 <div className="flex-1">
                   <div className="relative">
                     <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input placeholder="Search messages..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pl-10" />
+                    <Input 
+                      placeholder="Search messages..." 
+                      value={searchTerm} 
+                      onChange={e => setSearchTerm(e.target.value)} 
+                      className="pl-10" 
+                    />
                   </div>
                 </div>
                 <Select value={filterLanguage} onValueChange={setFilterLanguage}>
@@ -254,11 +296,9 @@ const AdminDashboard = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Languages</SelectItem>
-                    <SelectItem value="English">English</SelectItem>
-                    <SelectItem value="French">French</SelectItem>
-                    <SelectItem value="Arabic">Arabic</SelectItem>
-                    <SelectItem value="German">German</SelectItem>
-                    <SelectItem value="Spanish">Spanish</SelectItem>
+                    {kpis?.languages.map(lang => (
+                      <SelectItem key={lang} value={lang}>{lang}</SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <Select value={filterFlagged} onValueChange={setFilterFlagged}>
@@ -288,17 +328,18 @@ const AdminDashboard = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredMessages.map(message => <TableRow key={message.id}>
+                    {filteredMessages.map(message => (
+                      <TableRow key={message.id}>
                         <TableCell className="text-sm">
                           {message.timestamp.toLocaleString()}
                         </TableCell>
-                        <TableCell>{message.userCountry}</TableCell>
+                        <TableCell>{message.userCountry || 'Unknown'}</TableCell>
                         <TableCell>{message.language}</TableCell>
                         <TableCell className="max-w-xs truncate">
                           {message.userMessage}
                         </TableCell>
                         <TableCell className="max-w-xs truncate">
-                          {message.assistantMessage}
+                          {message.assistantMessage || 'No response yet'}
                         </TableCell>
                         <TableCell>
                           <Badge variant={message.flagged ? "destructive" : "secondary"}>
@@ -315,9 +356,15 @@ const AdminDashboard = () => {
                             </Button>
                           </div>
                         </TableCell>
-                      </TableRow>)}
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
+                {filteredMessages.length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    No conversations found matching your filters.
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -337,24 +384,42 @@ const AdminDashboard = () => {
               <div className="space-y-2">
                 <Label htmlFor="pdf-upload">Upload PDF Document</Label>
                 <div className="flex items-center gap-4">
-                  <Input id="pdf-upload" type="file" accept=".pdf" onChange={handleFileUpload} className="flex-1" />
-                  <Button onClick={handleUploadSubmit} disabled={!uploadedFile} className="flex items-center gap-2">
+                  <Input 
+                    id="pdf-upload" 
+                    type="file" 
+                    accept=".pdf" 
+                    onChange={handleFileUpload} 
+                    className="flex-1" 
+                  />
+                  <Button 
+                    onClick={handleUploadSubmit} 
+                    disabled={!uploadedFile} 
+                    className="flex items-center gap-2"
+                  >
                     <Upload className="h-4 w-4" />
                     Upload
                   </Button>
                 </div>
-                {uploadedFile && <p className="text-sm text-green-600">
+                {uploadedFile && (
+                  <p className="text-sm text-green-600">
                     Selected: {uploadedFile.name} ({(uploadedFile.size / 1024 / 1024).toFixed(2)} MB)
-                  </p>}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="context-description">Context Description (Optional)</Label>
-                <Textarea id="context-description" placeholder="Describe what this document contains and how it should be used by the model..." className="min-h-[80px]" />
+                <Textarea 
+                  id="context-description" 
+                  placeholder="Describe what this document contains and how it should be used by the model..." 
+                  className="min-h-[80px]" 
+                />
               </div>
             </CardContent>
           </Card>
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default AdminDashboard;
