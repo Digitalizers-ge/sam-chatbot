@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { VoiceOrb } from '@/components/VoiceOrb';
@@ -7,6 +6,7 @@ import { SourcesBox } from '@/components/SourcesBox';
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { NavigationMenu } from '@/components/NavigationMenu';
 import { useToast } from '@/hooks/use-toast';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 export interface Message {
   id: string;
@@ -21,6 +21,7 @@ const Index = () => {
   const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
   const [languageError, setLanguageError] = useState(false);
   const { toast } = useToast();
+  const { trackUserQuestion, trackAssistantResponse } = useAnalytics();
 
   // Initialize with empty messages array
   const [messages, setMessages] = useState<Message[]>([]);
@@ -196,8 +197,18 @@ const Index = () => {
     });
   };
 
-  const handleAudioProcessed = (originalText: string, translatedText: string) => {
+  const handleAudioProcessed = async (originalText: string, translatedText: string) => {
     console.log('Audio processed - Original:', originalText, 'Translated:', translatedText);
+
+    // Get user's country (you could implement geolocation or user input for this)
+    const userCountry = 'Unknown'; // You can enhance this with actual country detection
+    const language = getLanguageCode(selectedLanguage);
+
+    // Track user question in analytics
+    await trackUserQuestion(originalText, language, userCountry);
+
+    // Track assistant response in analytics
+    await trackAssistantResponse(translatedText, language, userCountry);
 
     // Add user message (original text)
     const userMessage: Message = {
