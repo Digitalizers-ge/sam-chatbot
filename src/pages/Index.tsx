@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { VoiceOrb } from '@/components/VoiceOrb';
@@ -7,7 +6,7 @@ import { SourcesBox } from '@/components/SourcesBox';
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { NavigationMenu } from '@/components/NavigationMenu';
 import { useToast } from '@/hooks/use-toast';
-import { useTrackedConversation } from '@/hooks/useTrackedConversation';
+import { useAnalytics } from '@/hooks/useAnalytics';
 
 export interface Message {
   id: string;
@@ -22,9 +21,7 @@ const Index = () => {
   const [recordedAudio, setRecordedAudio] = useState<Blob | null>(null);
   const [languageError, setLanguageError] = useState(false);
   const { toast } = useToast();
-  
-  // Use the tracking hook directly here - single instance
-  const { addMessage } = useTrackedConversation();
+  const { trackUserQuestion, trackAssistantResponse } = useAnalytics();
 
   // Initialize with empty messages array
   const [messages, setMessages] = useState<Message[]>([]);
@@ -206,14 +203,14 @@ const Index = () => {
     console.log('🔍 INDEX: Audio processed - Original:', originalText, 'Translated:', translatedText);
 
     // Get user's country (you could implement geolocation or user input for this)
-    const userCountry = 'Test_Country';
+    const userCountry = 'Test_Country'; // Changed from 'Unknown' to help with debugging
     const language = getLanguageCode(selectedLanguage);
 
     console.log('🔍 INDEX: About to track user question with:', { originalText, language, userCountry });
 
-    // Track user question directly
+    // Track user question in analytics
     try {
-      await addMessage(originalText, 'user', language, userCountry);
+      await trackUserQuestion(originalText, language, userCountry);
       console.log('🔍 INDEX: User question tracked successfully');
     } catch (error) {
       console.error('🔍 INDEX: Error tracking user question:', error);
@@ -221,9 +218,9 @@ const Index = () => {
 
     console.log('🔍 INDEX: About to track assistant response with:', { translatedText, language, userCountry });
 
-    // Track assistant response directly
+    // Track assistant response in analytics
     try {
-      await addMessage(translatedText, 'assistant', language, userCountry);
+      await trackAssistantResponse(translatedText, language, userCountry);
       console.log('🔍 INDEX: Assistant response tracked successfully');
     } catch (error) {
       console.error('🔍 INDEX: Error tracking assistant response:', error);
