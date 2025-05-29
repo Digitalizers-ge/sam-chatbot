@@ -147,39 +147,42 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen sam-gradient-bg">
-      <div className="min-h-screen bg-white/10 backdrop-blur-sm p-6">
+      <div className="min-h-screen bg-white/10 backdrop-blur-sm p-3 md:p-6">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-8 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link to="/" className="hover:opacity-80 transition-opacity">
-                <img src="/lovable-uploads/22846939-a307-4be2-b1d0-39a60a6cf0de.png" alt="SAM Logo" className="h-24 w-auto" />
-              </Link>
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
-                <p className="text-gray-600">Monitor platform usage and moderate conversations</p>
+          {/* Mobile-responsive header */}
+          <div className="mb-6 md:mb-8">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <Link to="/" className="hover:opacity-80 transition-opacity">
+                  <img src="/lovable-uploads/22846939-a307-4be2-b1d0-39a60a6cf0de.png" alt="SAM Logo" className="h-16 md:h-24 w-auto" />
+                </Link>
+                <div>
+                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
+                  <p className="text-sm md:text-base text-gray-600">Monitor platform usage and moderate conversations</p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <Button 
-                onClick={handleCreateMeeting}
-                className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
-              >
-                <Plus className="w-4 h-4" />
-                Create a new meeting
-              </Button>
-              <NavigationMenu />
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4">
+                <Button 
+                  onClick={handleCreateMeeting}
+                  className="bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2 text-sm md:text-base"
+                >
+                  <Plus className="w-4 h-4" />
+                  Create a new meeting
+                </Button>
+                <NavigationMenu />
+              </div>
             </div>
           </div>
 
-          {/* Key Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {/* Key Metrics - Responsive grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
             <Card className="sam-glass">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Total Questions</CardTitle>
                 <MessageSquare className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{kpis?.total_questions.toLocaleString() || '0'}</div>
+                <div className="text-xl md:text-2xl font-bold">{kpis?.total_questions.toLocaleString() || '0'}</div>
                 <p className="text-xs text-muted-foreground">Real-time from conversations</p>
               </CardContent>
             </Card>
@@ -190,7 +193,7 @@ const AdminDashboard = () => {
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{kpis?.active_sessions.toLocaleString() || '0'}</div>
+                <div className="text-xl md:text-2xl font-bold">{kpis?.active_sessions.toLocaleString() || '0'}</div>
                 <p className="text-xs text-muted-foreground">Last 24 hours</p>
               </CardContent>
             </Card>
@@ -201,7 +204,7 @@ const AdminDashboard = () => {
                 <BarChart3 className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{kpis?.avg_questions_per_session || '0'}</div>
+                <div className="text-xl md:text-2xl font-bold">{kpis?.avg_questions_per_session || '0'}</div>
                 <p className="text-xs text-muted-foreground">Calculated from sessions</p>
               </CardContent>
             </Card>
@@ -212,26 +215,26 @@ const AdminDashboard = () => {
                 <Globe className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{kpis?.active_users.toLocaleString() || '0'}</div>
+                <div className="text-xl md:text-2xl font-bold">{kpis?.active_users.toLocaleString() || '0'}</div>
                 <p className="text-xs text-muted-foreground">Registered users</p>
               </CardContent>
             </Card>
           </div>
 
-          {/* Charts */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Charts - Mobile responsive */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
             <Card className="sam-glass">
               <CardHeader>
-                <CardTitle>Languages Usage</CardTitle>
-                <CardDescription>Most used languages on the platform</CardDescription>
+                <CardTitle className="text-lg md:text-xl">Languages Usage</CardTitle>
+                <CardDescription className="text-sm">Most used languages on the platform</CardDescription>
               </CardHeader>
               <CardContent>
-                <ChartContainer config={chartConfig} className="h-[300px]">
+                <ChartContainer config={chartConfig} className="h-[250px] md:h-[300px]">
                   <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={languageData}>
+                    <BarChart data={languageData} margin={{ top: 20, right: 20, left: 0, bottom: 20 }}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="language" />
-                      <YAxis />
+                      <XAxis dataKey="language" fontSize={12} />
+                      <YAxis fontSize={12} />
                       <ChartTooltip content={<ChartTooltipContent />} />
                       <Bar dataKey="count" fill="var(--color-count)" />
                     </BarChart>
@@ -242,21 +245,22 @@ const AdminDashboard = () => {
 
             <Card className="sam-glass">
               <CardHeader>
-                <CardTitle>Users by Country</CardTitle>
-                <CardDescription>Geographic distribution of users</CardDescription>
+                <CardTitle className="text-lg md:text-xl">Users by Country</CardTitle>
+                <CardDescription className="text-sm">Geographic distribution of users</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="h-[300px]">
+                <div className="h-[250px] md:h-[300px]">
                   <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
+                    <PieChart margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
                       <Pie 
                         data={countryData} 
                         cx="50%" 
                         cy="50%" 
-                        outerRadius={80} 
+                        outerRadius={window.innerWidth < 768 ? 60 : 80}
                         fill="#8884d8" 
                         dataKey="users" 
-                        label={({ country, users }) => `${country}: ${users}`}
+                        label={({ country, users }) => window.innerWidth < 768 ? `${users}` : `${country}: ${users}`}
+                        fontSize={window.innerWidth < 768 ? 10 : 12}
                       >
                         {countryData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.color} />
@@ -270,15 +274,15 @@ const AdminDashboard = () => {
             </Card>
           </div>
 
-          {/* Message Moderation */}
+          {/* Message Moderation - Mobile responsive */}
           <Card className="sam-glass">
             <CardHeader>
-              <CardTitle>Message Moderation</CardTitle>
-              <CardDescription>Review and moderate platform conversations</CardDescription>
+              <CardTitle className="text-lg md:text-xl">Message Moderation</CardTitle>
+              <CardDescription className="text-sm">Review and moderate platform conversations</CardDescription>
             </CardHeader>
             <CardContent>
-              {/* Filters */}
-              <div className="flex flex-col md:flex-row gap-4 mb-6">
+              {/* Mobile-responsive filters */}
+              <div className="flex flex-col gap-3 md:flex-row md:gap-4 mb-4 md:mb-6">
                 <div className="flex-1">
                   <div className="relative">
                     <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
@@ -286,72 +290,74 @@ const AdminDashboard = () => {
                       placeholder="Search messages..." 
                       value={searchTerm} 
                       onChange={e => setSearchTerm(e.target.value)} 
-                      className="pl-10" 
+                      className="pl-10 text-sm" 
                     />
                   </div>
                 </div>
-                <Select value={filterLanguage} onValueChange={setFilterLanguage}>
-                  <SelectTrigger className="w-full md:w-[180px]">
-                    <SelectValue placeholder="Filter by language" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Languages</SelectItem>
-                    {kpis?.languages.map(lang => (
-                      <SelectItem key={lang} value={lang}>{lang}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select value={filterFlagged} onValueChange={setFilterFlagged}>
-                  <SelectTrigger className="w-full md:w-[180px]">
-                    <SelectValue placeholder="Filter by status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Messages</SelectItem>
-                    <SelectItem value="flagged">Flagged Only</SelectItem>
-                    <SelectItem value="not-flagged">Not Flagged</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="grid grid-cols-2 gap-3 md:flex md:gap-4">
+                  <Select value={filterLanguage} onValueChange={setFilterLanguage}>
+                    <SelectTrigger className="w-full md:w-[180px]">
+                      <SelectValue placeholder="Filter by language" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Languages</SelectItem>
+                      {kpis?.languages.map(lang => (
+                        <SelectItem key={lang} value={lang}>{lang}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Select value={filterFlagged} onValueChange={setFilterFlagged}>
+                    <SelectTrigger className="w-full md:w-[180px]">
+                      <SelectValue placeholder="Filter by status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Messages</SelectItem>
+                      <SelectItem value="flagged">Flagged Only</SelectItem>
+                      <SelectItem value="not-flagged">Not Flagged</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
-              {/* Messages Table */}
-              <div className="border rounded-lg">
+              {/* Mobile-responsive table */}
+              <div className="border rounded-lg overflow-x-auto">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Timestamp</TableHead>
-                      <TableHead>Country</TableHead>
-                      <TableHead>Language</TableHead>
-                      <TableHead>User Message</TableHead>
-                      <TableHead>Assistant Response</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Actions</TableHead>
+                      <TableHead className="min-w-[120px]">Timestamp</TableHead>
+                      <TableHead className="min-w-[80px]">Country</TableHead>
+                      <TableHead className="min-w-[80px]">Language</TableHead>
+                      <TableHead className="min-w-[200px]">User Message</TableHead>
+                      <TableHead className="min-w-[200px]">Assistant Response</TableHead>
+                      <TableHead className="min-w-[80px]">Status</TableHead>
+                      <TableHead className="min-w-[120px]">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredMessages.map(message => (
                       <TableRow key={message.id}>
-                        <TableCell className="text-sm">
+                        <TableCell className="text-xs md:text-sm">
                           {message.timestamp.toLocaleString()}
                         </TableCell>
-                        <TableCell>{message.userCountry || 'Unknown'}</TableCell>
-                        <TableCell>{message.language}</TableCell>
-                        <TableCell className="max-w-xs truncate">
+                        <TableCell className="text-xs md:text-sm">{message.userCountry || 'Unknown'}</TableCell>
+                        <TableCell className="text-xs md:text-sm">{message.language}</TableCell>
+                        <TableCell className="max-w-[150px] md:max-w-xs truncate text-xs md:text-sm">
                           {message.userMessage}
                         </TableCell>
-                        <TableCell className="max-w-xs truncate">
+                        <TableCell className="max-w-[150px] md:max-w-xs truncate text-xs md:text-sm">
                           {message.assistantMessage || 'No response yet'}
                         </TableCell>
                         <TableCell>
-                          <Badge variant={message.flagged ? "destructive" : "secondary"}>
+                          <Badge variant={message.flagged ? "destructive" : "secondary"} className="text-xs">
                             {message.flagged ? "Flagged" : "Normal"}
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          <div className="flex gap-2">
-                            <Button variant="outline" size="sm">
+                          <div className="flex flex-col sm:flex-row gap-1 sm:gap-2">
+                            <Button variant="outline" size="sm" className="text-xs">
                               View
                             </Button>
-                            <Button variant={message.flagged ? "secondary" : "destructive"} size="sm">
+                            <Button variant={message.flagged ? "secondary" : "destructive"} size="sm" className="text-xs">
                               {message.flagged ? "Unflag" : "Flag"}
                             </Button>
                           </div>
@@ -361,7 +367,7 @@ const AdminDashboard = () => {
                   </TableBody>
                 </Table>
                 {filteredMessages.length === 0 && (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-gray-500 text-sm md:text-base">
                     No conversations found matching your filters.
                   </div>
                 )}
@@ -369,49 +375,49 @@ const AdminDashboard = () => {
             </CardContent>
           </Card>
 
-          {/* Knowledge Upload Section */}
-          <Card className="mt-8 sam-glass">
+          {/* Knowledge Upload Section - Mobile responsive */}
+          <Card className="mt-6 md:mt-8 sam-glass">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+                <FileText className="h-4 w-4 md:h-5 md:w-5" />
                 Model Training
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-sm">
                 Upload PDF documents to teach the model about your own contextual information
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="pdf-upload">Upload PDF Document</Label>
-                <div className="flex items-center gap-4">
+                <Label htmlFor="pdf-upload" className="text-sm">Upload PDF Document</Label>
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <Input 
                     id="pdf-upload" 
                     type="file" 
                     accept=".pdf" 
                     onChange={handleFileUpload} 
-                    className="flex-1" 
+                    className="flex-1 text-sm" 
                   />
                   <Button 
                     onClick={handleUploadSubmit} 
                     disabled={!uploadedFile} 
-                    className="flex items-center gap-2"
+                    className="flex items-center justify-center gap-2 text-sm"
                   >
                     <Upload className="h-4 w-4" />
                     Upload
                   </Button>
                 </div>
                 {uploadedFile && (
-                  <p className="text-sm text-green-600">
+                  <p className="text-xs md:text-sm text-green-600">
                     Selected: {uploadedFile.name} ({(uploadedFile.size / 1024 / 1024).toFixed(2)} MB)
                   </p>
                 )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="context-description">Context Description (Optional)</Label>
+                <Label htmlFor="context-description" className="text-sm">Context Description (Optional)</Label>
                 <Textarea 
                   id="context-description" 
                   placeholder="Describe what this document contains and how it should be used by the model..." 
-                  className="min-h-[80px]" 
+                  className="min-h-[80px] text-sm" 
                 />
               </div>
             </CardContent>
