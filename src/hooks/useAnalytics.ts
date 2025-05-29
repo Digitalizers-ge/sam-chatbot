@@ -1,35 +1,8 @@
 
-import { useTrackedConversation } from './useTrackedConversation';
-
-// Hook to easily integrate analytics tracking into chat components
+// Simple analytics hook that doesn't use useTrackedConversation
 export const useAnalytics = () => {
-  const { addMessage, sessionId } = useTrackedConversation();
-
-  const trackUserQuestion = async (
-    question: string, 
-    language: string = 'en', 
-    userCountry?: string
-  ) => {
-    console.log('🔍 ANALYTICS: Tracking user question:', { question, language, userCountry, sessionId });
-    const result = await addMessage(question, 'user', language, userCountry);
-    console.log('🔍 ANALYTICS: User question tracked, result:', result);
-    return result;
-  };
-
-  const trackAssistantResponse = async (
-    response: string, 
-    language: string = 'en', 
-    userCountry?: string
-  ) => {
-    console.log('🔍 ANALYTICS: Tracking assistant response:', { response, language, userCountry, sessionId });
-    const result = await addMessage(response, 'assistant', language, userCountry);
-    console.log('🔍 ANALYTICS: Assistant response tracked, result:', result);
-    return result;
-  };
-
+  // Just return session info for now - tracking will be handled directly in Index.tsx
   return {
-    trackUserQuestion,
-    trackAssistantResponse,
-    sessionId,
+    sessionId: 'analytics-placeholder',
   };
 };
