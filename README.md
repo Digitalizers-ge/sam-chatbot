@@ -42,7 +42,7 @@ MIT – Free to use for good causes. Please contact us for NGO deployments or pa
 
 ## 🛠️ Tech Stack
 
-!(public/sam_architecture.png)
+![SAM Architecture](public/sam_architecture.png)
 
 - Frontend: Next.js (TypeScript, Tailwind CSS), AWS Amplify
 - Backend: API Gateway, AWS Lambda 
