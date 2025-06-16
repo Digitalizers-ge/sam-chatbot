@@ -1,73 +1,70 @@
-# Welcome to your Lovable project
+# 🧭 SAM – Smart Assistant for Migrants
 
-## Project info
+**SAM** is a multilingual AI assistant designed to support humanitarian organizations in serving displaced people and migrants more efficiently.
 
-**URL**: https://lovable.dev/projects/4530f4e2-377b-4c32-bbb6-36acfbcdf0d1
+This cloud-based web application allows users to ask questions (via text or voice) and receive answers powered by AWS services such as Transcribe, Translate, and Amazon Bedrock (Claude). NGOs access a dedicated dashboard for real-time insights, moderation, and multilingual co-conversations.
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 🌍 Mission
 
-**Use Lovable**
+To empower NGOs with smart tools that:
+- Break language and literacy barriers.
+- Automate repetitive communication and reporting tasks.
+- Surface insights from the field to inform better decisions.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/4530f4e2-377b-4c32-bbb6-36acfbcdf0d1) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+## ✨ Features
 
-**Use your preferred IDE**
+- 🎤 **Voice-to-Text**: Users can speak in their native language – auto-transcribed and translated.
+- 🧠 **AI-Powered Q&A**: Smart assistant answers contextual questions based on custom knowledge bases.
+- 🌐 **Multilingual Interface**: Text and audio input/output in dozens of supported languages.
+- 📊 **NGO Dashboard**: Monitor usage, moderate content, and identify trends across conversations.
+- 🗂️ **Conversation Summaries**: Generate meeting notes and structured reports for internal use.
+- 🔒 **Hosted on AWS**: Scalable, secure, and GDPR-compliant infrastructure.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 👥 Team
+- Louis – Founder & Product Lead
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 🤝 Contributing
+Pull requests are welcome! For major changes, please open an issue first to discuss what you’d like to change. Let’s build something impactful together.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+---
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 📄 License
+MIT – Free to use for good causes. Please contact us for NGO deployments or partnerships.
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+---
 
-**Edit a file directly in GitHub**
+## 🛠️ Tech Stack
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+![Aperçu de SAM](public/sam-architecture.png)
 
-**Use GitHub Codespaces**
+- Frontend: Next.js (TypeScript, Tailwind CSS), AWS Amplify
+- Backend: API Gateway, AWS Lambda 
+- AI Services: Amazon Transcribe, Translate, Bedrock (Claude), RAG Faiss
+- Storage: Amazon S3
+- Auth: (TBD - AWS Cognito or custom)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## 🚀 Getting Started
 
-This project is built with:
+> _This project is currently under active development. Contributions and feedback are welcome._
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Prerequisites
 
-## How can I deploy this project?
+- Node.js 18+
+- AWS CLI with programmatic access
+- Access to Bedrock, Transcribe, Translate, and S3
 
-Simply open [Lovable](https://lovable.dev/projects/4530f4e2-377b-4c32-bbb6-36acfbcdf0d1) and click on Share -> Publish.
+### Setup
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+```bash
+git clone https://github.com/your-org/sam.git
+cd sam
+npm install
