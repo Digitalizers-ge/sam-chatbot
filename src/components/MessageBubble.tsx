@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Play } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 interface MessageBubbleProps {
   message: string;
@@ -59,7 +60,13 @@ export const MessageBubble = ({
         }`}>
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1">
-              <p className="text-base leading-relaxed whitespace-pre-wrap">{message}</p>
+              {isUser ? (
+                <p className="text-base leading-relaxed whitespace-pre-wrap">{message}</p>
+              ) : (
+                <div className="text-base leading-relaxed prose prose-sm max-w-none prose-headings:text-gray-800 prose-p:text-gray-700 prose-strong:text-gray-800 prose-em:text-gray-600 prose-ul:text-gray-700 prose-ol:text-gray-700 prose-li:text-gray-700 prose-code:text-gray-800 prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded">
+                  <ReactMarkdown>{message}</ReactMarkdown>
+                </div>
+              )}
               <p className={`text-xs mt-2 ${isUser ? 'text-white/80' : 'text-gray-500'}`}>
                 {formatTime(timestamp)}
               </p>
