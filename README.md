@@ -1,3 +1,4 @@
+![SAM Logo](public/logo_sam2.png)
 # 🧭 SAM – Smart Assistant for Migrants
 
 **SAM** is a multilingual AI assistant designed to support humanitarian organizations in serving displaced people and migrants more efficiently.
