@@ -30,10 +30,10 @@ To empower NGOs with smart tools that:
 - Louis – Product Owner
 - Valentin - Tech Owner
 - Aziz - Project Lead
-- Martyna - Scrum Master
-- Nganji - 
-- Karen - 
-- Ali - Public Relations
+- Martyna - Content and RAG Research Specialist
+- Nganji - Conceptor & visionary
+- Karen - Human Insight & Soul Systems Strategist
+- Ali - Public Relations Manager 
 - Ange - Backend lead
 
 ---
