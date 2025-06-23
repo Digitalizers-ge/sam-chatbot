@@ -13,25 +13,25 @@ export const SourcesBox = () => {
     {
       title: "UNHCR Refugee Rights",
       description: "Official UN guide to refugee rights and protections",
-      url: "https://www.unhcr.org",
+      url: "https://help.unhcr.org/faq/how-can-we-help-you/rights-and-duties/",
       type: "official"
     },
     {
       title: "EU Asylum Procedures",
       description: "Common European Asylum System overview",
-      url: "https://ec.europa.eu",
+      url: "https://home-affairs.ec.europa.eu/policies/migration-and-asylum/asylum-eu/asylum-procedures_en",
       type: "legal"
     },
     {
       title: "Legal Aid Directory",
       description: "Find free legal assistance in your area",
-      url: "#",
+      url: "https://home-affairs.ec.europa.eu/policies/migration-and-asylum/asylum-eu/asylum-procedures_en",
       type: "resource"
     },
     {
       title: "Asylum Seeker's Guide",
       description: "Step-by-step process explanation",
-      url: "#",
+      url: "https://asylumineurope.org/wp-content/uploads/2020/11/aida_accessii_registration.pdf",
       type: "guide"
     },
     {
