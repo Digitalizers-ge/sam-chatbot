@@ -72,6 +72,12 @@ export const SourcesBox = () => {
     }
   };
 
+  const handleResourceClick = (url: string) => {
+    if (url && url !== '#') {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
     <div className="sam-glass rounded-2xl p-6">
       <h2 className="text-xl font-semibold text-gray-800 mb-4">Sources & Resources</h2>
@@ -80,7 +86,7 @@ export const SourcesBox = () => {
         {sources.map((source, index) => (
           <div
             key={index}
-            className="bg-white/50 rounded-lg p-4 hover:bg-white/70 transition-colors cursor-pointer"
+            className="bg-white/50 rounded-lg p-4 hover:bg-white/70 transition-colors"
           >
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-center space-x-2">
@@ -94,7 +100,10 @@ export const SourcesBox = () => {
             
             <p className="text-xs text-gray-600 mb-2">{source.description}</p>
             
-            <div className="flex items-center text-blue-600 hover:text-blue-800">
+            <div 
+              className="flex items-center text-blue-600 hover:text-blue-800 cursor-pointer"
+              onClick={() => handleResourceClick(source.url)}
+            >
               <ExternalLink className="w-3 h-3 mr-1" />
               <span className="text-xs">View Resource</span>
             </div>
