@@ -27,7 +27,14 @@ To empower NGOs with smart tools that:
 
 
 ## 👥 Team
-- Louis – Founder & Product Lead
+- Louis – Product Owner
+- Valentin - Tech Owner
+- Aziz - Project Lead
+- Martyna - Scrum Master
+- Nganji - 
+- Karen - 
+- Ali - Public Relations
+- Ange - Backend lead
 
 ---
 
@@ -49,23 +56,10 @@ MIT – Free to use for good causes. Please contact us for NGO deployments or pa
 - Backend: API Gateway, AWS Lambda 
 - AI Services: Amazon Transcribe, Translate, Bedrock (Claude), RAG Faiss
 - Storage: Amazon S3
-- Auth: (TBD - AWS Cognito or custom)
+- Auth: Supabase
 
 ---
 
-## 🚀 Getting Started
+## 🚀 This is a project for AWS: Breaking Barriers Hackathon
 
-> _This project is currently under active development. Contributions and feedback are welcome._
-
-### Prerequisites
-
-- Node.js 18+
-- AWS CLI with programmatic access
-- Access to Bedrock, Transcribe, Translate, and S3
-
-### Setup
-
-```bash
-git clone https://github.com/your-org/sam.git
-cd sam
-npm install
+https://aws.amazon.com/fr/telecom/breaking-barriers/
